@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HMS Registration</title>
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'HMS/regstyle.css' %}" />
+<link href='http://fonts.googleapis.com/css?family=Engagement' rel='stylesheet' type='text/css'>
+<!--[if IE]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+      $(function(){
+        $("input:checkbox, input:radio, input:file, select").uniform();
+      });
+    </script>
+</head>
+<body>
+<article>
+	<h1>Registration</h1>
+
+	<form action="addNurse" style="margin-left:auto;margin-right:auto;">
+		<input type="submit" value="Nurse Registration" class="myButton">
+	</form>
+	<form action="addDoctor">
+		<input type="submit" value="Doctor Registration" class="myButton">
+	</form>
+	<form action="addPatient">
+		<input type="submit" value="Patient Registration" class="myButton">
+	</form>
+	<form action="addNurse">
+		<input type="submit" value="Admin Registration" class="myButton">
+	</form>
+</article>
+</body>
+<script>
+</script>
+<footer>
+</footer>

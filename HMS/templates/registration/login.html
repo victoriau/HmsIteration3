@@ -1,0 +1,102 @@
+<html lang="en">
+<head>
+    <title>Doctor Home</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+
+</head>
+<body>  
+	<div class = "row">
+		<div class = "col-xs-12">
+			<div class = "page-header">
+				</br>
+			</div>
+		</div>
+	</div>
+	<div class = "container"> 
+		<div class = "row">
+            <div class = "col-sm-8 col-xs-12">
+                <!--Main Content-->
+                <div class = "panel panel-primary">
+                    <div class = "panel-heading">
+                        <h3 class="panel-title">Health Management Site</h3>
+                    </div>
+                    <div class = "panel-body">
+                        <img src="http://cadrplus.com/wp-content/uploads/2012/05/doctors.png"/>
+                    </div>
+                </div>
+            </div>
+            <div class = "col-sm-4 col-xs-12">    
+                <!--Side Content-->
+                <div class = "panel panel-default">
+                    <div class = "panel-heading">
+                        <h3 class="panel-title">Log-In</h3>
+                    </div>
+                    <div class = "panel-body">
+						{% block content %}
+							<div>
+							  {% if user.is_anonymous %} 
+								<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+								{% csrf_token %}
+									<p> Email: </br>
+									{{ form.username }} </br>
+
+									<p> Password: </br>
+									{{ form.password }} </br>
+									</p>
+
+
+								<input type="submit" value="login" />
+								<input type="hidden" name="next" value="{{ next }}" />
+								</form>
+							  {% else %} 
+								 <p> You have already logged in. </br> 
+								 Click 
+								 <a href="../HMS/home">here</a> 
+								 to go to your homepage. </br> 
+								 Or
+								 <a href="{% url 'django.contrib.auth.views.logout' %}">logout</a> 
+								 </p>
+							  {% endif %}
+							</div>
+						{% if form.errors %}
+						<p>Your username and password didn't match. Please try again.</p>
+						{% endif %}
+					{% endblock %}
+
+                    </div>
+                </div>
+            </div> 
+			<div class = "col-sm-4 col-xs-12">    
+                <!--Side Content-->
+                <div class = "panel panel-default">
+                    <div class = "panel-heading">
+                        <h3 class="panel-title">Register</h3>
+                    </div>
+                    <div class = "panel-body">
+						<a href="{% url 'add_Patient' %}">Nurse</a></br> 
+						<a href="{% url 'add_Nurse' %}">Patient</a></br>
+						<a href="{% url 'add_Doctor' %}">Doctor</a></br>
+
+                    </div>
+                </div>
+            </div>
+        </div>  
+		<div class = "row">
+            <!--Footer-->
+            <div class = "col-xs-12">
+                <div class = "panel panel-default">
+                    <div class = "panel-heading">
+                        <p class="text-center">Created By: Riston Bergen, Victoria Utter & Ricky Zamudio</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div> 
+</div>

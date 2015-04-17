@@ -1,0 +1,15 @@
+<head>
+{% if user.doctor.is_doctor %}
+	<meta http-equiv="refresh" content="0; url=/HMS/doctor_home" />
+{% endif %} 
+{% if user.nurse.is_nurse %}
+	<meta http-equiv="refresh" content="0; url=/HMS/nurse_home" />
+{% endif %}  
+{% if user.patient.is_patient %}
+	<meta http-equiv="refresh" content="0; url=/HMS/patient_home" />
+{% endif %}   
+{% if user.is_admin %}
+	<meta http-equiv="refresh" content="0; url=/admin" />
+{% endif %}    
+
+</head>

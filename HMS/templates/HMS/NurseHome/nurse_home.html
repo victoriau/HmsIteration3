@@ -1,0 +1,86 @@
+<html lang="en">
+<head>
+    <title>Nurse Home</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+
+</head>
+<body>
+<div class = "container">   
+	<div class = "row"> 
+		<div class "col-xs-12"> 
+			<div class = "page-header">
+				{% if user.is_anonymous %}
+					<a href="{% url 'django.contrib.auth.views.login' %}">login</a>
+				{% else %}   
+					<h1> Welcome, Nurse {{user.first_name}} {{user.last_name}} </h1>  
+			</div> 
+		</div> 
+	</div> 
+	<div class = "row">
+		<div class = "col-xs-12">
+			<!--Main Content-->
+			<div class = "panel panel-primary">
+				<div class = "panel-heading">
+					<h3 class="panel-title">{{user.nurse.department}} Patient List</h3>
+				</div>
+				<div class = "panel-body">  				
+					{% if patient_list %}
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>First Name</th>
+								<th>Last Name</th>
+								<th>Department</th> 
+								<th>Medical History</th>
+								<th>Details</th>
+							</tr>
+						</thead>
+						<tbody> 
+							{% for patient in patient_list %} 
+								{% if patient.department == user.nurse.department %} 
+								<tr>
+								  <td>{{patient.first_name}}</td>
+								  <td>{{patient.last_name}}</td>
+								  <td>{{patient.department}}</td> 
+								  <td> TO BE FILLED </td>
+								  <td><a href="{% url 'patdetail' patient.id %}">Details</a></td>
+								</tr> 
+								{% endif %}
+							{% endfor %}
+						</tbody>
+					</table> 
+					{% else %}
+						<p>No assigned patients.</p>
+					{% endif %} 
+				</div>
+			</div>
+		</div>
+	</div> 
+	<div class = "row">
+		<div class = "col-xs-12">
+			<!--Main Content-->
+			<div class = "panel panel-primary">
+				<div class = "panel-heading">
+					<h3 class="panel-title">Account Management</h3>
+				</div>
+				<div class = "panel-body"> 
+					<a href= "{% url 'password_change' %}">Change Password</a></br>
+					<a href="{% url 'django.contrib.auth.views.logout' %}">Logout</a>
+					<br/>
+					<p> Click to view your <a href="{% url 'cal_home' %}">calendar</a></p>
+					{% endif %} 
+					
+				</div>
+			</div>
+		</div>
+	</div>
+ </div>
+</body>
+</html>

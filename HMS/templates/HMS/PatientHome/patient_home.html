@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html> 
+    <head> 
+        <title>Patient Home</title>  
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+			
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		<script src="http://code.jquery.com/jquery.min.js"></script>
+
+        <script type="text/javascript" charset="utf-8"> 
+           function filterContent() {
+				var user = document.getElementById("myDropdown").value;  
+				var contentAA = document.getElementById("ALL");
+				var contentA = document.getElementById("PED");
+				var contentB = document.getElementById("ONC");
+				var contentC = document.getElementById("FAM");
+				var contentD = document.getElementById("EME");
+				var contentE = document.getElementById("ORT"); 
+				if(user=="AA") {  
+					contentAA.style.display="block";
+					contentA.style.display="none";
+					contentB.style.display="none";
+					contentC.style.display="none";
+					contentD.style.display="none";
+					contentE.style.display="none";
+				} 
+				if (user=="A") { 
+					contentAA.style.display="none";
+					contentA.style.display="block";
+					contentB.style.display="none";
+					contentC.style.display="none";
+					contentD.style.display="none";
+					contentE.style.display="none";
+				}else if (user=="B") {
+					contentAA.style.display="none";
+					contentA.style.display="none";
+					contentB.style.display="block";
+					contentC.style.display="none";
+					contentD.style.display="none";
+					contentE.style.display="none";
+				} else if (user=="C") {
+					contentAA.style.display="none";
+					contentA.style.display="none";
+					contentB.style.display="none";
+					contentC.style.display="block";
+					contentD.style.display="none";
+					contentE.style.display="none";
+				} else if (user=="D") {
+					contentAA.style.display="none";
+					contentA.style.display="none";
+					contentB.style.display="none";
+					contentC.style.display="none";
+					contentD.style.display="block";
+					contentE.style.display="none";
+				} else if (user=="E") {
+					contentAA.style.display="none";
+					contentA.style.display="none";
+					contentB.style.display="none";
+					contentC.style.display="none";
+					contentD.style.display="none";
+					contentE.style.display="block";
+				}
+			}
+        </script> 
+    </head>  
+
+    <body>  
+	<div class = "container">   
+		<div class = "row"> 
+			<div class "col-xs-12"> 
+				<div class = "page-header">	
+					{% if user.is_anonymous %}
+						<a href="{% url 'django.contrib.auth.views.login' %}">login</a>
+					{% else %}   
+						<h1> Welcome, {{user.first_name}} {{user.last_name}} </h1>  
+					{% endif %}
+				</div> 
+			</div> 
+		</div>  
+		<div class = "row">
+			<div class = "col-xs-12">
+				<!--Main Content-->
+				<div class = "panel panel-primary">
+					<div class = "panel-heading">
+						<h3 class="panel-title">My Information</h3>
+					</div>
+					<div class = "panel-body"> 
+						<div> 
+							<p> Primary Care Provider: Dr. {{user.patient.primaryCareProvider.first_name}} {{user.patient.primaryCareProvider.last_name}} </br> 
+							Department: {{user.patient.department}}
+							</p>
+						</div>	
+					</div> 
+				</div> 
+			</div> 
+		</div>
+		<div class = "row">
+			<div class = "col-xs-12">
+				<!--Main Content-->
+				<div class = "panel panel-primary">
+					<div class = "panel-heading">
+						<h3>Doctor List </h3>  
+						<label for="specialty">Filter by Specialty: </label>
+						<select style="color:BLACK" id="myDropdown" onchange="filterContent();">
+							<option style="color:BLACK" value="AA">All Specialties</option>
+							<option style="color:BLACK" value="A">Pediatrics</option>
+							<option style="color:BLACK" value="B">Oncology</option>
+							<option style="color:BLACK" value="C">Family Practice</option>
+							<option style="color:BLACK" value="D">Emergency</option>
+							<option style="color:BLACK" value="E">Orthopedics</option>
+						</select> 
+					</div> 
+					<div class ="panel-body">
+						{% if doctor_list %} 
+							<div id = "ALL">  
+								<table class="table table-striped" id="t1">
+									<thead>
+										<tr>
+											<th>First Name</th>
+											<th>Last Name</th>
+											<th>Department</th> 
+											<th>Medical History</th>
+											<th>Details</th>
+										</tr>
+									</thead> 
+									<tbody>
+										{% for doctor in doctor_list %} 
+												<tr> 
+													<td>{{doctor.first_name}}</td>
+													<td>{{doctor.last_name}}</td>
+													<td>{{doctor.specialty}}</td> 
+													<td> TO BE FILLED </td>
+													<td><a href="{% url 'docdetail' doctor.id %}">Details</a></td>
+												</tr>
+										{% endfor %} 
+									</tbody> 
+								</table>
+							</div>
+							<div id="PED" style="display:none">   
+								<table class="table table-striped" id="t1">
+									<thead>
+										<tr>
+											<th>First Name</th>
+											<th>Last Name</th>
+											<th>Department</th> 
+											<th>Medical History</th>
+											<th>Details</th>
+										</tr>
+									</thead> 
+									<tbody>
+										{% for doctor in doctor_list %} 
+											{% if doctor.specialty == "PED" %} 
+												<tr> 
+													<td>{{doctor.first_name}}</td>
+													<td>{{doctor.last_name}}</td>
+													<td>{{doctor.specialty}}</td> 
+													<td> TO BE FILLED </td>
+													<td><a href="{% url 'docdetail' doctor.id %}">Details</a></td>
+												</tr>
+											{% endif %}
+										{% endfor %} 
+									</tbody> 
+								</table>
+							</div>
+							<div id="ONC" style="display:none">  
+								<table class="table table-striped" id="t2">
+									<thead>
+										<tr>
+											<th>First Name</th>
+											<th>Last Name</th>
+											<th>Department</th> 
+											<th>Medical History</th>
+											<th>Details</th>
+										</tr>
+									</thead>  
+									<tbody>
+										{% for doctor in doctor_list %}
+											{% if doctor.specialty == "ONC" %}
+												<tr>
+													<td>{{doctor.first_name}}</td>
+													<td>{{doctor.last_name}}</td>
+													<td>{{doctor.specialty}}</td> 
+													<td> TO BE FILLED </td>
+													<td><a href="{% url 'docdetail' doctor.id %}">Details</a></td>
+												</tr>
+											{% endif %}
+										{% endfor %} 
+									</tbody> 
+								</table>
+							</div>
+							<div id="FAM" style="display:none">   
+								<table class="table table-striped" id="t1">
+									<thead>
+										<tr>
+											<th>First Name</th>
+											<th>Last Name</th>
+											<th>Department</th> 
+											<th>Medical History</th>
+											<th>Details</th>
+										</tr>
+									</thead> 
+									<tbody>
+										{% for doctor in doctor_list %} 
+											{% if doctor.specialty == "FAM" %} 
+												<tr> 
+													<td>{{doctor.first_name}}</td>
+													<td>{{doctor.last_name}}</td>
+													<td>{{doctor.specialty}}</td> 
+													<td> TO BE FILLED </td>
+													<td><a href="{% url 'docdetail' doctor.id %}">Details</a></td>
+												</tr>
+											{% endif %}
+										{% endfor %} 
+									</tbody> 
+								</table>
+							</div> 
+							<div id="EME" style="display:none">  
+								<table class="table table-striped" id="t1">
+									<thead>
+										<tr>
+											<th>First Name</th>
+											<th>Last Name</th>
+											<th>Department</th> 
+											<th>Medical History</th>
+											<th>Details</th>
+										</tr>
+									</thead> 
+									<tbody>
+										{% for doctor in doctor_list %} 
+											{% if doctor.specialty == "EME" %} 
+												<tr> 
+													<td>{{doctor.first_name}}</td>
+													<td>{{doctor.last_name}}</td>
+													<td>{{doctor.specialty}}</td> 
+													<td> TO BE FILLED </td>
+													<td><a href="{% url 'docdetail' doctor.id %}">Details</a></td>
+												</tr>
+											{% endif %}
+										{% endfor %} 
+									</tbody> 
+								</table>
+							</div>
+							<div id="ORT" style="display:none">  
+								<table class="table table-striped" id="t1">
+									<thead>
+										<tr>
+											<th>First Name</th>
+											<th>Last Name</th>
+											<th>Department</th> 
+											<th>Medical History</th>
+											<th>Details</th>
+										</tr>
+									</thead> 
+									<tbody>
+										{% for doctor in doctor_list %} 
+											{% if doctor.specialty == "ORT" %} 
+												<tr> 
+													<td>{{doctor.first_name}}</td>
+													<td>{{doctor.last_name}}</td>
+													<td>{{doctor.specialty}}</td> 
+													<td> TO BE FILLED </td>
+													<td><a href="{% url 'docdetail' doctor.id %}">Details</a></td>
+												</tr>
+											{% endif %}
+										{% endfor %} 
+									</tbody> 
+								</table>
+							</div>  
+						{% else %}
+							<p>No doctors available.</p>
+						{% endif %}   
+					</div> 
+				</div> 
+			</div> 
+		</div>  
+		<div class = "row">
+			<div class = "col-xs-12">
+				<!--Main Content-->
+				<div class = "panel panel-primary">
+					<div class = "panel-heading">
+						<h3 class="panel-title">Appointments</h3>
+					</div>
+					<div class = "panel-body">  
+						<a href= "{%url 'create_appt'%}"> Add Appointment </a></br></br> 
+						{% if user.patient.appointment_set %}
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>Doctor Name</th>
+										<th>Start Time</th>
+										<th>End Time</th> 
+										<th> </th>
+									</tr>
+								</thead>
+								<tbody> 
+								{% for appointment in user.patient.appointment_set.all %}   
+									<tr> 
+									  <td>Dr. {{appointment.doctor.first_name}} {{appointment.doctor.last_name}}</td>
+									  <td>{{appointment.startTime}}</td>
+									  <td>{{appointment.endTime}}</td> 
+									  <td><a href="">Delete Appointment</a></td>
+									</tr>  
+								{% endfor %}
+								</tbody>
+							</table> 
+							{% else %}
+							<p>No Scheduled Appointments.</p>
+						{% endif %} 
+					</div> 
+				</div> 
+			</div> 
+		</div>
+		<div class = "row">
+			<div class = "col-xs-12">
+				<!--Main Content-->
+				<div class = "panel panel-primary">
+					<div class = "panel-heading">
+						<h3 class="panel-title">Account Management</h3>
+					</div>
+					<div class = "panel-body"> 
+						<a href= "{% url 'password_change' %}">Change Password</a></br> 
+						<!--<a href= "../admin/HMS/patient/37">TEST EDIT</a> </br>-->
+						<a href = "{% url 'medical_history' %}">Edit my Medical History</a></br>
+						<a href="{% url 'change_Patient' %}">Edit My Profile</a> </br> 
+						<a href="{% url 'change_PCP' user.patient.id %}">Select Primary Care Provider</a> </br>
+						<a href="{% url 'django.contrib.auth.views.logout' %}">Logout</a> 
+					</div> 
+				</div> 
+			</div> 
+		</div>
+	</div>
+    </body> 
+</html>

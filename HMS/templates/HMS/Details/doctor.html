@@ -1,0 +1,10 @@
+<h1> Doctor Details </h1>
+<h2> Name: {{doctor.first_name}} {{doctor.last_name}} </h2> 
+<h2> Degree: {{doctor.degree}} </h2>  
+<h2> Specialty: {{doctor.specialty}} </h2>  
+<h2> Experience: {{doctor.experience}} </h2> 
+<h2> Availability: </h2> 
+
+<a href> Select this doctor as your primary care provider </a> </br>
+<a href="../HMS/home">Back to my homepage</a> </br> 
+<a href="{% url 'django.contrib.auth.views.logout' %}">Logout</a> 

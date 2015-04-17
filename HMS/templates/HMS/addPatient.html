@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HMS Registration</title>
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'HMS/regstyle.css' %}" />
+
+		<h1>Add Patient</h1>
+		<h2>Input patient information below.</h2>
+	<!-- start registration --> 
+	<div class = "registration"> 
+		<div class = "registration_left">
+		 <div class="registration_form">
+		 <!-- Form -->
+			<form id="registration_form" action="" method="post">
+				{{ form }}	
+				{% csrf_token %}
+				<div>
+                    <input type="submit" value="Submit" id="save-submit">
+				</div>
+			</form>
+			<!-- /Form -->
+		</div> 
+		</div> 
+	</div>
+	<!-- end registration -->
+	<script type="text/javascript">
+        document.getElementById("id_instructors").value = "{{ user.email }}";
+    </script>
+	<div class="clear"></div>
+
+</html>
