@@ -5,6 +5,7 @@ from django.forms import ModelForm
 from HMS.models import MyUser, Nurse, Doctor, Patient, Appointment
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.forms.models import inlineformset_factory
+import datetime
 
 class PatientCreationForm(ModelForm):
     """A form for creating new users. Includes all the required
@@ -223,13 +224,21 @@ class UserChangeForm(ModelForm):
         return self.initial["password"]
 	
 
-class AppointmentCreationForm(ModelForm):
+class PatAppointmentCreationForm(ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
     class Meta:
         model = Appointment
-        fields = ('startTime', 'endTime', 'doctor', 'patient',)
-        
+        fields = ('startTime', 'endTime', 'doctor')
+        exclude = ('patient',)
+
+class DocAppointmentCreationForm(ModelForm):
+    """A form for creating new users. Includes all the required
+    fields, plus a repeated password."""
+    class Meta:
+        model = Appointment
+        fields = ('startTime', 'endTime', 'patient')
+        exclude = ('doctor',)
     
 class MedicalHistoryForm(ModelForm):
     """A form for updating users. Includes all the fields on

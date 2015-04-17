@@ -285,7 +285,7 @@
 						<h3 class="panel-title">Appointments</h3>
 					</div>
 					<div class = "panel-body">  
-						<a href= "{%url 'create_appt'%}"> Add Appointment </a></br></br> 
+						<a href= "{%url 'create_pat_appt' user.patient.id%}"> Add Appointment </a></br></br> 
 						{% if user.patient.appointment_set %}
 							<table class="table table-striped">
 								<thead>
@@ -323,7 +323,6 @@
 					</div>
 					<div class = "panel-body"> 
 						<a href= "{% url 'password_change' %}">Change Password</a></br> 
-						<!--<a href= "../admin/HMS/patient/37">TEST EDIT</a> </br>-->
 						<a href = "{% url 'medical_history' %}">Edit my Medical History</a></br>
 						<a href="{% url 'change_Patient' %}">Edit My Profile</a> </br> 
 						<a href="{% url 'change_PCP' user.patient.id %}">Select Primary Care Provider</a> </br>

@@ -120,7 +120,7 @@ class PatientAdmin(UserAdmin):
         ('Emergency Contact', {'fields': ('name', 'relation', 'primary_Phone', 'secondary_Phone')}),
         ('Patient Details', {'fields': ('department','medical_History', 'insurance_Provider', 'insurance_Policy_Number')}),
 		#('Medical History', {'fields': ('allergies', 'prescriptions')}),
-        ('Permissions', {'fields': ('is_admin', 'is_content_manager', 'primaryCareProvider')}),
+        ('Permissions', {'fields': ('is_admin', 'is_content_manager','is_active', 'primaryCareProvider')}),
     )
     inlines = [AppointmentInline]
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin

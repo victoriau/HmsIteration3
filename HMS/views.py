@@ -5,7 +5,8 @@ from django.template import RequestContext, loader
 from HMS.forms import (NurseCreationForm, NurseChangeForm, UserCreationForm,
                        UserChangeForm, DoctorCreationForm, DoctorChangeForm,
                        PatientChangeForm, PatientCreationForm, MedicalHistoryForm,
-                       PCPChangeForm, AppointmentCreationForm)
+                       PCPChangeForm, PatAppointmentCreationForm,
+                       DocAppointmentCreationForm)
 from django.core.urlresolvers import reverse
 from HMS.models import MyUser, Nurse, Doctor, Patient
 from django.contrib import auth
@@ -248,11 +249,36 @@ def change_PCP(request, patient_id):
             return HttpResponseRedirect('HMS/patient_homepage')
     return render(request, 'HMS/changePCP.html', {'form': form})
 
-def create_Appt(request):
-    form  = AppointmentCreationForm(request.POST or None)
-    if form.is_valid():
-            form.save()
+def create_Pat_Appt(request, patient_id):
+    instance = Patient.objects.get(id=patient_id)
+    if request.method == 'POST':
+        form  = PatAppointmentCreationForm(request.POST or None)
+        
+        if form.is_valid():
+            test = form.save(commit = False)
+            test.patient = instance
+            test.save()
+
+            form = PatAppointmentCreationForm()
             return HttpResponseRedirect('HMS/patient_homepage')
+    else:
+        form = PatAppointmentCreationForm()
+    return render(request, 'HMS/createAppt.html', {'form': form})
+
+def create_Doc_Appt(request, doctor_id):
+    instance = Doctor.objects.get(id=doctor_id)
+    if request.method == 'POST':
+        form  = DocAppointmentCreationForm(request.POST or None)
+        
+        if form.is_valid():
+            test = form.save(commit = False)
+            test.doctor = instance
+            test.save()
+
+            form = DocAppointmentCreationForm()
+            return HttpResponseRedirect('HMS/doctor_homepage')
+    else:
+        form = DocAppointmentCreationForm()
     return render(request, 'HMS/createAppt.html', {'form': form})
 
 """def register_confirm(request, activation_key):
