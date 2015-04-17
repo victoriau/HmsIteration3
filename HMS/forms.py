@@ -47,6 +47,11 @@ class PCPChangeForm(ModelForm):
         model = Patient
         fields = ('primaryCareProvider',)
 
+class ApptChangeForm(ModelForm):
+    class Meta:
+        model = Appointment
+        fields = ('startTime', 'endTime')
+
 class PatientChangeForm(ModelForm):
     """A form for updating users. Includes all the fields on
     the user, but replaces the password field with admin's

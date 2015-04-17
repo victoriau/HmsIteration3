@@ -293,6 +293,7 @@
 										<th>Doctor Name</th>
 										<th>Start Time</th>
 										<th>End Time</th> 
+										<th> </th> 
 										<th> </th>
 									</tr>
 								</thead>
@@ -301,8 +302,9 @@
 									<tr> 
 									  <td>Dr. {{appointment.doctor.first_name}} {{appointment.doctor.last_name}}</td>
 									  <td>{{appointment.startTime}}</td>
-									  <td>{{appointment.endTime}}</td> 
-									  <td><a href="">Delete Appointment</a></td>
+									  <td>{{appointment.endTime}}</td>  
+									  <td><a href="{%url 'change_appt' appointment.id%}">Change Appointment</a></td> 
+									  <td><a href="{%url 'delete_appt' appointment.id%}">Delete Appointment</a></td>
 									</tr>  
 								{% endfor %}
 								</tbody>

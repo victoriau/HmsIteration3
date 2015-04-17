@@ -5,7 +5,7 @@ from django.template import RequestContext, loader
 from HMS.forms import (NurseCreationForm, NurseChangeForm, UserCreationForm,
                        UserChangeForm, DoctorCreationForm, DoctorChangeForm,
                        PatientChangeForm, PatientCreationForm, MedicalHistoryForm,
-                       PCPChangeForm, PatAppointmentCreationForm,
+                       PCPChangeForm, PatAppointmentCreationForm, ApptChangeForm,
                        DocAppointmentCreationForm)
 from django.core.urlresolvers import reverse
 from HMS.models import MyUser, Nurse, Doctor, Patient, Appointment
@@ -240,7 +240,6 @@ def change_Patient(request):
         form = form_class()
         return render(request, template_name, {'form': form})
 
-
 def change_PCP(request, patient_id):
     instance = Patient.objects.get(id=patient_id)
     form  = PCPChangeForm(request.POST or None, instance=instance)
@@ -284,6 +283,14 @@ def create_Doc_Appt(request, doctor_id):
 def delete_Appt(request, id):
     appt = get_object_or_404(Appointment, pk=id).delete()
     return HttpResponseRedirect('HMS/home')
+
+def change_Appt(request, id):
+    instance = Appointment.objects.get(id=id)
+    form  = ApptChangeForm(request.POST or None, instance=instance)
+    if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('HMS/home')
+    return render(request, 'HMS/changeAppt.html', {'form': form})
 
 """def register_confirm(request, activation_key):
     #check if user is already logged in and if he is redirect him to some other url, e.g. home
