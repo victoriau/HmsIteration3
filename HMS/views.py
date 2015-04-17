@@ -8,7 +8,7 @@ from HMS.forms import (NurseCreationForm, NurseChangeForm, UserCreationForm,
                        PCPChangeForm, PatAppointmentCreationForm,
                        DocAppointmentCreationForm)
 from django.core.urlresolvers import reverse
-from HMS.models import MyUser, Nurse, Doctor, Patient
+from HMS.models import MyUser, Nurse, Doctor, Patient, Appointment
 from django.contrib import auth
 from django.core.context_processors import csrf
 from django.core.mail import send_mail
@@ -280,6 +280,10 @@ def create_Doc_Appt(request, doctor_id):
     else:
         form = DocAppointmentCreationForm()
     return render(request, 'HMS/createAppt.html', {'form': form})
+
+def delete_Appt(request, id):
+    appt = get_object_or_404(Appointment, pk=id).delete()
+    return HttpResponseRedirect('HMS/home')
 
 """def register_confirm(request, activation_key):
     #check if user is already logged in and if he is redirect him to some other url, e.g. home

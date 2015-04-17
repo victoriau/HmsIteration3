@@ -88,7 +88,7 @@
 									  <td>{{appointment.patient.first_name}} {{appointment.patient.last_name}}</td>
 									  <td>{{appointment.startTime}}</td>
 									  <td>{{appointment.endTime}}</td> 
-									  <td><a href="">Delete Appointment</a></td>
+									  <td><a href="{%url 'delete_appt' appointment.id%}">Delete Appointment</a></td>
 									</tr>  
 								{% endfor %}
 								</tbody>
