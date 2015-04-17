@@ -42,6 +42,7 @@ def doctor_home(request):
 
 def cal_home(request):
     return render(request, 'HMS/swingtime/cal_home.html')
+
 def patient_detail(request, patient_id):
     patient = get_object_or_404(Patient, pk=patient_id)
     return render(request, 'HMS/Details/patient.html', {'patient': patient})
@@ -285,12 +286,12 @@ def delete_Appt(request, id):
     return HttpResponseRedirect('HMS/home')
 
 def change_Appt(request, id):
-    instance = Appointment.objects.get(id=id)
-    form  = ApptChangeForm(request.POST or None, instance=instance)
+    appointment = Appointment.objects.get(id=id)
+    form  = ApptChangeForm(request.POST or None, instance=appointment)
     if form.is_valid():
             form.save()
             return HttpResponseRedirect('HMS/home')
-    return render(request, 'HMS/changeAppt.html', {'form': form})
+    return render(request, 'HMS/changeAppt.html', {'form': form, 'appointment':appointment})
 
 """def register_confirm(request, activation_key):
     #check if user is already logged in and if he is redirect him to some other url, e.g. home
