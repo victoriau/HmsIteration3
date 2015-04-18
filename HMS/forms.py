@@ -2,7 +2,7 @@ from django import forms
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ModelForm
-from HMS.models import MyUser, Nurse, Doctor, Patient, Appointment
+from HMS.models import MyUser, Nurse, Doctor, Patient, Appointment, Bill
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.forms.models import inlineformset_factory
 import datetime
@@ -234,7 +234,7 @@ class PatAppointmentCreationForm(ModelForm):
     fields, plus a repeated password."""
     class Meta:
         model = Appointment
-        fields = ('startTime', 'endTime', 'doctor')
+        fields = ('startTime', 'endTime', 'doctor', 'purpose')
         exclude = ('patient',)
 
 class DocAppointmentCreationForm(ModelForm):
@@ -242,8 +242,15 @@ class DocAppointmentCreationForm(ModelForm):
     fields, plus a repeated password."""
     class Meta:
         model = Appointment
-        fields = ('startTime', 'endTime', 'patient')
+        fields = ('startTime', 'endTime', 'patient', 'purpose')
         exclude = ('doctor',)
+
+class BillPayForm(ModelForm):
+    """A form for creating new users. Includes all the required
+    fields, plus a repeated password."""
+    class Meta:
+        model = Bill
+        fields = ('status',)
     
 class MedicalHistoryForm(ModelForm):
     """A form for updating users. Includes all the fields on

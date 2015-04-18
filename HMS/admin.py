@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from HMS.models import MyUser, Nurse, Doctor, Patient, Appointment
+from HMS.models import MyUser, Nurse, Doctor, Patient, Appointment, Bill
 from HMS.forms import (NurseCreationForm, NurseChangeForm, UserCreationForm, UserChangeForm,
                        DoctorCreationForm, DoctorChangeForm, PatientChangeForm, PatientCreationForm)
 
@@ -70,6 +70,10 @@ class NurseAdmin(UserAdmin):
 class AppointmentInline(admin.StackedInline):
     model = Appointment
     extra = 0
+
+class BillInline(admin.StackedInline):
+    model = Bill
+    extra = 0
     
 class DoctorAdmin(UserAdmin):
     # The forms to add and change user instances
@@ -87,7 +91,7 @@ class DoctorAdmin(UserAdmin):
         ('Address', {'fields': ('house_number', 'street', 'city', 'state', 'zip_code')}),
         ('Emergency Contact', {'fields': ('name', 'relation', 'primary_Phone', 'secondary_Phone')}),
         ('Doctor Details', {'fields': ('degree', 'specialty', 'experience')}),
-        ('Permissions', {'fields': ('is_admin', 'is_content_manager')}),
+        ('Permissions', {'fields': ('is_admin', 'is_content_manager', 'is_active')}),
     )
     inlines = [AppointmentInline]
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
@@ -122,7 +126,7 @@ class PatientAdmin(UserAdmin):
 		#('Medical History', {'fields': ('allergies', 'prescriptions')}),
         ('Permissions', {'fields': ('is_admin', 'is_content_manager','is_active', 'primaryCareProvider')}),
     )
-    inlines = [AppointmentInline]
+    inlines = [AppointmentInline, BillInline]
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
     add_fieldsets = (
@@ -135,12 +139,23 @@ class PatientAdmin(UserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
 
+class AppointmentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'patient','doctor', 'purpose', 'startTime')
+    search_fields = ('purpose',)
+    ordering = ('startTime',)
+
+class BillAdmin(admin.ModelAdmin):
+    list_display = ('id', 'patient', 'appointment','amount', 'dueDate', 'released')
+    search_fields = ('patient',)
+    ordering = ('dueDate',)
+
 # Now register the new UserAdmin...
 admin.site.register(MyUser, MyUserAdmin)
 admin.site.register(Nurse, NurseAdmin)
 admin.site.register(Doctor, DoctorAdmin)
 admin.site.register(Patient, PatientAdmin)
-admin.site.register(Appointment)
+admin.site.register(Appointment, AppointmentAdmin)
+admin.site.register(Bill, BillAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)

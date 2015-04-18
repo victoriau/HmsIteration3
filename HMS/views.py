@@ -6,9 +6,9 @@ from HMS.forms import (NurseCreationForm, NurseChangeForm, UserCreationForm,
                        UserChangeForm, DoctorCreationForm, DoctorChangeForm,
                        PatientChangeForm, PatientCreationForm, MedicalHistoryForm,
                        PCPChangeForm, PatAppointmentCreationForm, ApptChangeForm,
-                       DocAppointmentCreationForm)
+                       DocAppointmentCreationForm, BillPayForm)
 from django.core.urlresolvers import reverse
-from HMS.models import MyUser, Nurse, Doctor, Patient, Appointment
+from HMS.models import MyUser, Nurse, Doctor, Patient, Appointment, Bill
 from django.contrib import auth
 from django.core.context_processors import csrf
 from django.core.mail import send_mail
@@ -50,6 +50,10 @@ def patient_detail(request, patient_id):
 def doctor_detail(request, doctor_id):
     doctor = get_object_or_404(Doctor, pk=doctor_id)
     return render(request, 'HMS/Details/doctor.html', {'doctor': doctor})
+
+def bill_Detail(request, id):
+    bill = get_object_or_404(Bill, pk=id)
+    return render(request, 'HMS/billDetail.html', {'bill': bill})
     
 def nurse_home(request):
     patient_list = Patient.objects.order_by('-last_name')[:25]
@@ -292,6 +296,14 @@ def change_Appt(request, id):
             form.save()
             return HttpResponseRedirect('HMS/home')
     return render(request, 'HMS/changeAppt.html', {'form': form, 'appointment':appointment})
+
+def pay_Bill(request, id):
+    instance = Bill.objects.get(id=id)
+    form  = BillPayForm(request.POST or None, instance = instance, initial={'status': "Paid"})
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('HMS/home')
+    return render(request, 'HMS/billPay.html', {'form': form})
 
 """def register_confirm(request, activation_key):
     #check if user is already logged in and if he is redirect him to some other url, e.g. home

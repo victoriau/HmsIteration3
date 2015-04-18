@@ -10,6 +10,8 @@ from localflavor.us.forms import USStateSelect
 from localflavor.us.us_states import US_STATES
 from localflavor.us.models import USZipCodeField
 from django.utils import timezone
+from decimal import Decimal
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -169,7 +171,7 @@ class Doctor(MyUser):
         verbose_name = ('Doctor')
         
     def __str__(self):              # __unicode__ on Python 2
-        return self.email
+        return self.first_name +' '+ self.last_name    
     
 class Patient(MyUser):
     PEDIATRICS = 'PED'
@@ -190,17 +192,39 @@ class Patient(MyUser):
     is_authenticated = models.BooleanField(default=True)
     allergies = models.CharField(max_length = 40, default = "")
     prescriptions = models.CharField(max_length = 40, default = "")
-    primaryCareProvider = models.ForeignKey(Doctor, default = 1)
+    primaryCareProvider = models.ForeignKey(Doctor, default = 1, blank = True, null = True)
 
     class Meta:
         verbose_name = ('Patient')
         
     def __str__(self):              # __unicode__ on Python 2
-        return self.email
+        return self.first_name +' '+self.last_name
 
 class Appointment(models.Model):
-        startTime = models.DateTimeField(default = timezone.now())
-        endTime = models.DateTimeField(default = timezone.now()+datetime.timedelta(hours=1))
-        doctor = models.ForeignKey(Doctor, default = 1)
-        patient = models.ForeignKey(Patient, default = 1)
-        pass
+    purpose = models.CharField(max_length = 20, default = "")
+    startTime = models.DateTimeField(default = timezone.now())
+    endTime = models.DateTimeField(default = timezone.now()+datetime.timedelta(hours=1))
+    doctor = models.ForeignKey(Doctor, default = 1)
+    patient = models.ForeignKey(Patient, default = 1)
+
+    def __str__(self):
+        return self.patient.last_name + ':' + self.purpose
+    
+class Bill(models.Model):
+    releaseDate = models.DateField(default = datetime.date.today())
+    dueDate = models.DateField(default = datetime.date.today() + datetime.timedelta(days = 30))
+    amount = models.DecimalField(max_digits=9, decimal_places = 2, default = Decimal('0.00'),
+                                 validators = [MinValueValidator(0.0)])
+    appointment = models.OneToOneField(Appointment, primary_key = False, null = True)
+    patient = models.ForeignKey(Patient, default = 1)
+    PAID = "Paid"
+    DUE = "Due"
+    OVER = "Overdue"
+    STATUS_CHOICES = ((PAID, 'Paid'),
+                      (DUE, 'Due'),
+                      (OVER, 'Overdue'))
+    status = models.CharField(max_length = 8, default = "", choices=STATUS_CHOICES)
+    released = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.patient.last_name + ':' + str(self.id)

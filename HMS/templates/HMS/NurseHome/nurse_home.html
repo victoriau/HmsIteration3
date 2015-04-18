@@ -8,7 +8,21 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
         
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery.min.js"></script> 
+	<script type="text/javascript" charset="utf-8"> 
+	$(document).on('click', '.panel-heading span.clickable', function(e){
+		var $this = $(this);
+		if(!$this.hasClass('panel-collapsed')) {
+			$this.parents('.panel').find('.panel-body').slideUp();
+			$this.addClass('panel-collapsed');
+			$this.find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+		} else {
+			$this.parents('.panel').find('.panel-body').slideDown();
+			$this.removeClass('panel-collapsed');
+			$this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+		}
+	}) 
+	</script>
 
 </head>
 <body>
@@ -28,7 +42,8 @@
 			<!--Main Content-->
 			<div class = "panel panel-primary">
 				<div class = "panel-heading">
-					<h3 class="panel-title">{{user.nurse.department}} Patient List</h3>
+					<h3 class="panel-title">{{user.nurse.department}} Patient List</h3> 
+					<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
 				</div>
 				<div class = "panel-body">  				
 					{% if patient_list %}
@@ -68,7 +83,8 @@
 			<!--Main Content-->
 			<div class = "panel panel-primary">
 				<div class = "panel-heading">
-					<h3 class="panel-title">Account Management</h3>
+					<h3 class="panel-title">Account Management</h3> 
+					<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
 				</div>
 				<div class = "panel-body"> 
 					<a href= "{% url 'password_change' %}">Change Password</a></br>
