@@ -18,6 +18,9 @@ from swingtime import models as swingtime
 from django.utils import timezone
 from django.views import generic
 from django.shortcuts import render_to_response, get_object_or_404
+from reportlab.pdfgen import canvas
+from django.core.mail.message import EmailMessage
+from django.conf import settings
 
 def login(request):
     return render(request, 'registration/login.html')
@@ -110,7 +113,7 @@ def add_Nurse(request):
             email_body = "Hey %s, thanks for signing up. To activate your account, click this link within \
             48hours http://127.0.0.1:8000/HMS/account/confirm/nurse/%s" % (email, activation_key)
 
-            send_mail(email_subject, email_body, 'ristonjbergen@gmail.com',
+            send_mail(email_subject, email_body, 'hospmgmtad@gmail.com',
                 [email], fail_silently=False)
 
             #return HttpResponseRedirect('/accounts/register_success')
@@ -159,7 +162,7 @@ def add_Doctor(request):
             email_body = "Hey %s, thanks for signing up. To activate your account, click this link within \
             48hours http://127.0.0.1:8000/HMS/account/confirm/doctor/%s" % (email, activation_key)
 
-            send_mail(email_subject, email_body, 'ristonjbergen@gmail.com',
+            send_mail(email_subject, email_body, 'hospmgmtad@gmail.com',
                 [email], fail_silently=False)
 
             #return HttpResponseRedirect('/accounts/register_success')
@@ -210,7 +213,7 @@ def add_Patient(request):
             email_body = "Hey %s, thanks for signing up. To activate your account, click this link within \
             48hours http://127.0.0.1:8000/HMS/account/confirm/patient/%s" % (email, activation_key)
 
-            send_mail(email_subject, email_body, 'ristonjbergen@gmail.com',
+            send_mail(email_subject, email_body, 'hospmgmtad@gmail.com',
                 [email], fail_silently=False)
 
             #return HttpResponseRedirect('/accounts/register_success')
@@ -261,7 +264,19 @@ def create_Pat_Appt(request, patient_id):
         if form.is_valid():
             test = form.save(commit = False)
             test.patient = instance
+            start = test.startTime
+            patient = test.patient
+            doctor = test.doctor
             test.save()
+            email = patient.email
+            email_subject = 'Appointment confirmation'
+            email_body = "Hello, this email is to confirm that %s %s registered for an appointment at %s with Dr. %s. \
+            We look forward to seeing you! If you have any questions or need to change your appointment email or call \
+            us." % (patient.first_name, patient.last_name, start, doctor.last_name)
+
+            mail= EmailMessage(email_subject, email_body, settings.EMAIL_HOST_USER, [email])
+            #mail.attach(response,attach.read(), "application/pdf")
+            mail.send()
 
             form = PatAppointmentCreationForm()
             return HttpResponseRedirect('HMS/patient_homepage')
@@ -302,8 +317,31 @@ def pay_Bill(request, id):
     form  = BillPayForm(request.POST or None, instance = instance, initial={'status': "Paid"})
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('HMS/home')
-    return render(request, 'HMS/billPay.html', {'form': form})
+        return HttpResponseRedirect('HMS/confirmation')
+    return render(request, 'HMS/billPay.html', {'form': form, 'bill':instance})
+
+def bill_Paid(request):
+    return render(request, 'HMS/billPaid.html')
+
+def pdf_gen(request, id):
+        patient = Patient.objects.get(id=id)
+        response = HttpResponse(content_type = 'application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="PatientReport.pdf"'
+
+        p = canvas.Canvas(response)
+        p.drawString(75,750, "Patient: " + patient.first_name + " " + patient.last_name)
+        p.drawString(75,735, "Doctor: " + patient.primaryCareProvider.first_name + " " + patient.primaryCareProvider.last_name)
+        p.drawString(75,720, "Treatments: " )            
+        appts = Appointment.objects.all()
+        num = 1
+        for i in appts:
+            if i.patient == patient:
+                p.drawString(75,720 - num*15, "Treatments: " + i.purpose)
+                num = num +1
+        p.showPage()
+        p.save()
+        return response
+    
 
 """def register_confirm(request, activation_key):
     #check if user is already logged in and if he is redirect him to some other url, e.g. home

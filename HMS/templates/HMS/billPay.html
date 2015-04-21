@@ -9,7 +9,23 @@
         
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="http://code.jquery.com/jquery.min.js"></script>
-
+	<script type="text/javascript" charset="utf-8"> 
+		function filterContent() {
+		var user = document.getElementById("myTextBox").value;  
+		var contentConf = document.getElementById("Confirmed"); 
+		var contentNo = document.getElementById("Incorrect"); 
+		var contentBut = document.getElementById("But");
+		if(user == {{bill.amount}}) {  
+			contentConf.style.display="block";
+			contentNo.style.display="none"; 
+			contentBut.style.display = "none"
+		}else{
+			contentConf.style.display="none";
+			contentNo.style.display="block"; 
+			contentBut.style.display = "block";
+		} 
+		}
+	</script>
 </head> 
 <body>
 <div class = "container">   
@@ -22,17 +38,32 @@
 				<div class = "panel-heading">
 					<h3 class='panel-title'> Pay Bill </h3> 
 				</div> 
-				<div class = "panel-body">  
-					<form  id="registration_form" action="" method="post"> 
-						<div style="display:none">
-						{{ form }}	 
-						{% csrf_token %} 
-						</div>
-						<div>
-							<input type = "submit" value = "Pay">
-						</div> 
-						<a href="../HMS/home" class="btn btn-default" role="button">Back to Homepage</a>
-					</form>
+				<div class = "panel-body">    
+					<div id="Incorrect" style="display:none">   
+						<label style="color:red"> Incorrect Amount Entered. Please Try Again.</label>
+					</div>
+					<label> Bill Amount: ${{bill.amount}}</label>
+					<form class="form-inline">
+					  <div class="form-group">
+						<label for="exampleInputName2">Amount: $</label>
+						<input type="decimal" class="form-control" id="myTextBox" placeholder="0.00"> 
+					  </div> 
+					</form> 
+					<div id = "But">
+						<button onclick="filterContent()" class="btn btn-default">Confirm Amount</button> 
+					</div>
+					<div id="Confirmed" style="display:none">   
+						<form  id="registration_form" action="" method="post"> 
+							<div style="display:none">
+								{{ form }}	 
+								{% csrf_token %} 
+							</div>
+							<div>
+								<input type = "submit" value = "Click to Pay">
+							</div> 
+						</form> 
+					</div> 
+					<a href="../HMS/home" class="btn btn-default" role="button">Back to Homepage</a>
 				</div>
 			</div> 
 		</div> 

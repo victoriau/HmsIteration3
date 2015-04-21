@@ -82,7 +82,7 @@ class MyUser(AbstractBaseUser):
     secondary_Phone = models.IntegerField(default = 0)
     is_content_manager = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     objects = MyUserManager()
 
     USERNAME_FIELD = 'email'

@@ -112,10 +112,10 @@ SWINGTIME_SETTINGS_MODULE = 'swingtime.conf.swingtime_settings'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'Hospmgmtad@gmail.com'
-EMAIL_HOST_PASSWORD = 'hospital'
+EMAIL_HOST_PASSWORD = 'Hospital'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'Ristonjbergen@gmail.com'
+DEFAULT_FROM_EMAIL = 'Hospmgmtad@gmail.com'
 
 try:
     import django_extensions

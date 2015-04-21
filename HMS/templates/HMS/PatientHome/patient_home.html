@@ -25,7 +25,8 @@
 			}
 		}) 
 		</script>
-        <script type="text/javascript" charset="utf-8"> 
+        <script type="text/javascript" charset="utf-8">  
+		
            function filterContent() {
 				var user = document.getElementById("myDropdown").value;  
 				var contentAA = document.getElementById("ALL");
@@ -80,7 +81,8 @@
 				}
 			}
         </script> 
-    </head>  
+
+	</head>  
 
     <body>  
 	<div class = "container">   
@@ -140,7 +142,8 @@
 											<th>First Name</th>
 											<th>Last Name</th>
 											<th>Department</th> 
-											<th>Medical History</th>
+											<th>Degree</th> 
+											<th>Experience</th>
 											<th>Details</th>
 										</tr>
 									</thead> 
@@ -150,7 +153,8 @@
 													<td>{{doctor.first_name}}</td>
 													<td>{{doctor.last_name}}</td>
 													<td>{{doctor.specialty}}</td> 
-													<td> TO BE FILLED </td>
+													<td> {{doctor.experience}}</td>
+													<td> {{doctor.degree}} </td> 
 													<td><a href="{% url 'docdetail' doctor.id %}">Details</a></td>
 												</tr>
 										{% endfor %} 
@@ -391,7 +395,8 @@
 						<h3 class="panel-title">Account Management</h3> 
 						<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
 					</div>
-					<div class = "panel-body"> 
+					<div class = "panel-body">  
+						<a href= "{% url 'pdfgen' user.patient.id %}">End Treatments</a></br> 
 						<a href= "{% url 'password_change' %}">Change Password</a></br> 
 						<a href = "{% url 'medical_history' %}">Edit my Medical History</a></br>
 						<a href="{% url 'change_Patient' %}">Edit My Profile</a> </br>
