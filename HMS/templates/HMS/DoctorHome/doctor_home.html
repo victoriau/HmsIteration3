@@ -54,7 +54,7 @@
 								<th>Last Name</th>
 								<th>Department</th> 
 								<th>Medical History</th>
-								<th>Details</th>
+								<th>Details</th> 
 							</tr>
 						</thead>
 						<tbody> 
@@ -64,8 +64,8 @@
 								  <td>{{patient.first_name}}</td>
 								  <td>{{patient.last_name}}</td>
 								  <td>{{patient.department}}</td> 
-								  <td> TBD </td>
-								  <td><a href="{% url 'patdetail' patient.id %}">Details</a></td>
+								  <td> {{patient.medical_History}}</td>
+								  <td><a href="{% url 'patdetail' patient.id %}">Details</a></td> 
 								</tr>  
 								{% endif %}
 							{% endfor %}
@@ -95,6 +95,7 @@
 										<th>Patient Name</th>
 										<th>Start Time</th>
 										<th>End Time</th> 
+										<th>Purpose</th> 
 										<th> </th> 
 										<th> </th>
 									</tr>
@@ -104,9 +105,18 @@
 									<tr> 
 									  <td>{{appointment.patient.first_name}} {{appointment.patient.last_name}}</td>
 									  <td>{{appointment.startTime}}</td>
-									  <td>{{appointment.endTime}}</td>  
-									  <td><a href="{%url 'change_appt' appointment.id%}">Change Appointment</a></td>
-									  <td><a href="{%url 'delete_appt' appointment.id%}">Delete Appointment</a></td>
+									  <td>{{appointment.endTime}}</td>   
+									  <td>{{appointment.purpose}}</td>
+									  {% if appointment.billed %}
+										<td> </td>   
+										<td> </td>  
+										<td> </td> 
+																		
+									  {% else %}  
+									  	<td><a href="{%url 'change_appt' appointment.id%}">Change Appointment</a></td>
+										<td><a href="{%url 'delete_appt' appointment.id%}">Delete Appointment</a></td> 
+										<td><a href="{%url 'bill_appt' appointment.id%}">End Treatment</a></td> 
+									  {% endif %}
 									</tr>  
 								{% endfor %}
 								</tbody>

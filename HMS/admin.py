@@ -53,7 +53,7 @@ class NurseAdmin(UserAdmin):
         ('Address', {'fields': ('house_number', 'street', 'city', 'state', 'zip_code')}),
         ('Emergency Contact', {'fields': ('name', 'relation', 'primary_Phone', 'secondary_Phone')}),
         #('Nurse Details', {'fields':('department')}),
-        ('Permissions', {'fields': ('is_admin', 'is_content_manager')}),
+        ('Permissions', {'fields': ('is_admin', 'is_content_manager', 'is_active')}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -140,9 +140,10 @@ class PatientAdmin(UserAdmin):
     filter_horizontal = ()
 
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'patient','doctor', 'purpose', 'startTime')
+    list_display = ('id', 'patient','doctor', 'purpose', 'startTime', 'billed')
     search_fields = ('purpose',)
     ordering = ('startTime',)
+    inlines = [BillInline]
 
 class BillAdmin(admin.ModelAdmin):
     list_display = ('id', 'patient', 'appointment','amount', 'dueDate', 'released')

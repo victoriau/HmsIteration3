@@ -251,6 +251,20 @@ class BillPayForm(ModelForm):
     class Meta:
         model = Bill
         fields = ('status',)
+
+class ReleaseBillForm(ModelForm):
+    """A form for creating new users. Includes all the required
+    fields, plus a repeated password."""
+    class Meta:
+        model = Bill
+        fields = ('released',)
+
+class BillApptForm(ModelForm):
+    """A form for creating new users. Includes all the required
+    fields, plus a repeated password."""
+    class Meta:
+        model = Appointment
+        fields = ('billed',)
     
 class MedicalHistoryForm(ModelForm):
     """A form for updating users. Includes all the fields on

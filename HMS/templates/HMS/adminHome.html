@@ -1,0 +1,225 @@
+<html lang="en">
+<head>
+    <title>Admin Home</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery.min.js"></script> 
+	<script type="text/javascript" charset="utf-8"> 
+		$(document).on('click', '.panel-heading span.clickable', function(e){
+			var $this = $(this);
+			if(!$this.hasClass('panel-collapsed')) {
+				$this.parents('.panel').find('.panel-body').slideUp();
+				$this.addClass('panel-collapsed');
+				$this.find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+			} else {
+				$this.parents('.panel').find('.panel-body').slideDown();
+				$this.removeClass('panel-collapsed');
+				$this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+			}
+		}) 
+	</script>
+
+</head>
+<body>
+<div class = "container">   
+	<div class = "row"> 
+		<div class "col-xs-12"> 
+			<div class = "page-header">
+				{% if user.is_anonymous %}
+					<a href="{% url 'django.contrib.auth.views.login' %}">login</a>
+				{% else %}   
+					<h1> Welcome, Admin {{user.first_name}} {{user.last_name}} </h1>  
+			</div> 
+		</div> 
+	</div> 
+	<div class = "row">
+		<div class = "col-xs-12">
+			<!--Main Content-->
+			<div class = "panel panel-primary">
+				<div class = "panel-heading">
+					<h3 class="panel-title">Appointments to Be Billed</h3> 
+					<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+				<div class = "panel-body">  				
+					{% if appt_list %}
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Patient Name</th>
+								<th>Start Time</th>
+								<th>End Time</th> 
+								<th>Purpose</th> 
+								<th> </th> 
+
+							</tr>
+						</thead>
+						<tbody> 
+						{% for appointment in appt_list %}  
+							{% if appointment.billed %} 
+								{% if appointment.bill %} 
+								{% else %} 
+									<tr>
+										<td>{{appointment.patient.first_name}} {{appointment.patient.last_name}}</td>
+										<td>{{appointment.startTime}}</td>
+										<td>{{appointment.endTime}}</td>   
+										<td>{{appointment.purpose}}</td> 
+										<td><a href= "../admin/HMS/appointment/{{appointment.id}}">Create Bill</a></td> 
+									</tr> 
+							    {% endif %}  
+							{% endif %} 
+						{% endfor %}
+						</tbody>
+					</table> 
+					{% else %}
+						<p>No Scheduled Appointments.</p>
+					{% endif %} 
+				</div>
+			</div>
+		</div>
+	</div>  
+	<div class = "row">
+		<div class = "col-xs-12">
+			<!--Main Content-->
+			<div class = "panel panel-primary">
+				<div class = "panel-heading">
+					<h3 class="panel-title">Bills</h3> 
+					<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+				<div class = "panel-body">  				
+					{% if bill_list %}
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Patient Name</th>
+								<th>Doctor Name</th>
+								<th>Purpose</th> 
+								<th>Amount</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody> 
+							{% for bill in bill_list %}  
+								<tr> 
+								  <td>{{bill.patient.first_name}} {{bill.patient.last_name}}</td>
+								  <td>{{bill.appointment.doctor.first_name}} {{bill.appointment.doctor.last_name}}</td>
+								  <td>{{bill.appointment.purpose}}</td> 
+								  <td>{{bill.amount}}</td>  
+								  {% if bill.released %}  
+										<td> {{bill.status}}</td>
+								  {% else %}  				
+										<td><a href="{%url 'release_bill' bill.id%}">Need to be Released</a></td> 
+								  {% endif %}
+								</tr>  
+							{% endfor %}
+						</tbody>
+					</table> 
+					{% else %}
+						<p>No bills.</p>
+					{% endif %} 
+				</div>
+			</div>
+		</div>
+	</div>  
+	<div class = "row">
+			<div class = "col-xs-12">
+				<!--Main Content-->
+				<div class = "panel panel-primary">
+					<div class = "panel-heading">
+						<h3 class="panel-title">Doctor Paychecks</h3> 
+						<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
+					</div>
+					<div class = "panel-body">  
+						{% if doctor_list %}
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Specialty</th>
+									<th>Degree</th> 
+									<th>Experience</th>
+									<th>Salary</th> 
+								</tr>
+							</thead>
+							<tbody> 
+								{% for doctor in doctor_list %}  
+									<tr> 
+									  <td>{{doctor.first_name}} {{doctor.last_name}}</td>
+									  <td>{{doctor.specialty}}</td>
+									  <td>{{doctor.degree}}</td> 
+									  <td>{{doctor.experience}} Years</td> 
+									  <td> $ TBD </td>
+									  <td> Paycheck</a></td>
+									</tr>  
+								{% endfor %}
+							</tbody>
+						</table> 
+						{% else %}
+							<p>No available doctors.</p>
+						{% endif %} 
+					</div> 
+				</div> 
+			</div> 
+		</div> 
+		<div class = "row">
+			<div class = "col-xs-12">
+				<!--Main Content-->
+				<div class = "panel panel-primary">
+					<div class = "panel-heading">
+						<h3 class="panel-title">Nurse Paychecks</h3> 
+						<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
+					</div>
+					<div class = "panel-body">  
+						{% if nurse_list %}
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Department</th> 
+									<th>Salary</th> 
+								</tr>
+							</thead>
+							<tbody> 
+								{% for nurse in nurse_list %}  
+									<tr> 
+									  <td>{{nurse.first_name}} {{nurse.last_name}}</td>
+									  <td>{{nurse.department}}</td>
+									  <td> $ TBD </td>
+									  <td> Paycheck</a></td>
+									</tr>  
+								{% endfor %}
+							</tbody>
+						</table> 
+						{% else %}
+							<p>No available nurses.</p>
+						{% endif %} 
+					</div> 
+				</div> 
+			</div> 
+		</div>
+	<div class = "row">
+		<div class = "col-xs-12">
+			<!--Main Content-->
+			<div class = "panel panel-primary">
+				<div class = "panel-heading">
+					<h3 class="panel-title">Account Management</h3> 
+					<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+				<div class = "panel-body">  
+					<a href= "../admin">User/Appointment/Billing Management</a></br>
+					<a href= "{% url 'password_change' %}">Change Password</a></br>
+					<a href="{% url 'django.contrib.auth.views.logout' %}">Logout</a>
+					<br/>
+					{% endif %} 
+					
+				</div>
+			</div>
+		</div>
+	</div>
+ </div>
+</body>
+</html>

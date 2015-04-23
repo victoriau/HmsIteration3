@@ -6,7 +6,8 @@ from HMS.forms import (NurseCreationForm, NurseChangeForm, UserCreationForm,
                        UserChangeForm, DoctorCreationForm, DoctorChangeForm,
                        PatientChangeForm, PatientCreationForm, MedicalHistoryForm,
                        PCPChangeForm, PatAppointmentCreationForm, ApptChangeForm,
-                       DocAppointmentCreationForm, BillPayForm)
+                       DocAppointmentCreationForm, BillPayForm, ReleaseBillForm,
+                       BillApptForm)
 from django.core.urlresolvers import reverse
 from HMS.models import MyUser, Nurse, Doctor, Patient, Appointment, Bill
 from django.contrib import auth
@@ -21,6 +22,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from reportlab.pdfgen import canvas
 from django.core.mail.message import EmailMessage
 from django.conf import settings
+import os
 
 def login(request):
     return render(request, 'registration/login.html')
@@ -64,7 +66,13 @@ def nurse_home(request):
     return render(request, 'HMS/NurseHome/nurse_home.html', context)
 
 def admin_home(request):
-    return HttpResponse("Administrator Homepage")
+    patient_list = Patient.objects.order_by('-last_name')[:25]
+    bill_list = Bill.objects.order_by('-dueDate')[:25]
+    doctor_list = Doctor.objects.order_by('-last_name')[:25]
+    nurse_list = Nurse.objects.order_by('-last_name')[:25]
+    appt_list = Appointment.objects.order_by('-startTime')[:25]
+    context = {'patient_list': patient_list, 'bill_list':bill_list, 'doctor_list':doctor_list, 'nurse_list':nurse_list, 'appt_list':appt_list}
+    return render(request, 'HMS/adminHome.html', context)
 
 def event_type(request, abbr):
     event_type = get_object_or_404(swingtime.EventType, abbr=abbr)
@@ -323,6 +331,46 @@ def pay_Bill(request, id):
 def bill_Paid(request):
     return render(request, 'HMS/billPaid.html')
 
+def release_Bill(request, id):
+    instance = Bill.objects.get(id=id)
+    form  = ReleaseBillForm(request.POST or None, instance=instance)
+    if form.is_valid():
+            form.save()
+            patient = instance.patient
+            response = HttpResponse(content_type = 'application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="Invoice.pdf"'
+
+            p = canvas.Canvas(response)
+            p.drawString(75,750, "Patient: " + patient.first_name + " " + patient.last_name)
+            p.drawString(75,735, "Doctor: " + patient.primaryCareProvider.first_name + " " + patient.primaryCareProvider.last_name)
+            p.drawString(75,720, "Treatments: " )            
+            appts = Appointment.objects.all()
+            num = 1
+            for i in appts:
+                if i.patient == patient:
+                    p.drawString(75,720 - num*15, "Treatments: " + i.purpose)
+                    num = num +1
+            p.showPage()
+            p.save()
+            email = patient.email
+            email_subject = 'Billing Statement'
+            email_body = "Hello, you have a new bill ready for payment. An invoice is attached to this email."
+
+            mail= EmailMessage(email_subject, email_body, settings.EMAIL_HOST_USER, [email])
+            mail.attach("Invoice.pdf", response.content, "application/pdf")
+            mail.send()
+            return HttpResponse("Email Sent")
+            #return HttpResponseRedirect('HMS/admin_homepage')
+    return render(request, 'HMS/releaseBill.html', {'form': form})
+
+def bill_Appt(request, id):
+    instance = Appointment.objects.get(id=id)
+    form  = BillApptForm(request.POST or None, instance=instance)
+    if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('HMS/home')
+    return render(request, 'HMS/billAppt.html', {'form': form})
+
 def pdf_gen(request, id):
         patient = Patient.objects.get(id=id)
         response = HttpResponse(content_type = 'application/pdf')
@@ -340,7 +388,14 @@ def pdf_gen(request, id):
                 num = num +1
         p.showPage()
         p.save()
-        return response
+        email = patient.email
+        email_subject = 'Billing Statement'
+        email_body = "Hello, this is your current billing statement for your last hospital visit."
+
+        mail= EmailMessage(email_subject, email_body, settings.EMAIL_HOST_USER, [email])
+        mail.attach("PatientReport.pdf", response.content, "application/pdf")
+        mail.send()
+        return HttpResponse("Email Sent")
     
 
 """def register_confirm(request, activation_key):

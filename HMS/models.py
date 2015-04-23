@@ -206,6 +206,7 @@ class Appointment(models.Model):
     endTime = models.DateTimeField(default = timezone.now()+datetime.timedelta(hours=1))
     doctor = models.ForeignKey(Doctor, default = 1)
     patient = models.ForeignKey(Patient, default = 1)
+    billed = models.BooleanField(default = False)
 
     def __str__(self):
         return self.patient.last_name + ':' + self.purpose
@@ -220,8 +221,8 @@ class Bill(models.Model):
     PAID = "Paid"
     DUE = "Due"
     OVER = "Overdue"
-    STATUS_CHOICES = ((PAID, 'Paid'),
-                      (DUE, 'Due'),
+    STATUS_CHOICES = ((DUE, 'Due'),
+                      (PAID, 'Paid'),
                       (OVER, 'Overdue'))
     status = models.CharField(max_length = 8, default = "", choices=STATUS_CHOICES)
     released = models.BooleanField(default=False)
