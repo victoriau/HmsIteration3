@@ -142,8 +142,8 @@
 											<th>First Name</th>
 											<th>Last Name</th>
 											<th>Department</th> 
-											<th>Degree</th> 
-											<th>Experience</th>
+											<th>Years Experience</th> 
+											<th>Degree</th>
 											<th>Details</th>
 										</tr>
 									</thead> 
@@ -153,9 +153,11 @@
 													<td>{{doctor.first_name}}</td>
 													<td>{{doctor.last_name}}</td>
 													<td>{{doctor.specialty}}</td> 
-													<td> {{doctor.experience}}</td>
-													<td> {{doctor.degree}} </td> 
-													<td><a href="{% url 'docdetail' doctor.id %}">Details</a></td>
+													<td> {{doctor.years_experience}}</td>
+													<td> {{doctor.degree}} </td>  
+													<td><a href="{%url 'docdetail' doctor.id%}">
+														<span class="glyphicon glyphicon-info-sign" style="margin-top: 3px; aria-hidden="true"></span> 
+													</a></td>
 												</tr>
 										{% endfor %} 
 									</tbody> 
@@ -168,7 +170,8 @@
 											<th>First Name</th>
 											<th>Last Name</th>
 											<th>Department</th> 
-											<th>Medical History</th>
+											<th>Years Experience</th> 
+											<th>Degree</th>
 											<th>Details</th>
 										</tr>
 									</thead> 
@@ -179,8 +182,11 @@
 													<td>{{doctor.first_name}}</td>
 													<td>{{doctor.last_name}}</td>
 													<td>{{doctor.specialty}}</td> 
-													<td> TO BE FILLED </td>
-													<td><a href="{% url 'docdetail' doctor.id %}">Details</a></td>
+													<td> {{doctor.years_experience}}</td>
+													<td> {{doctor.degree}} </td>  
+													<td><a href="{%url 'docdetail' doctor.id%}">
+														<span class="glyphicon glyphicon-info-sign" style="margin-top: 3px; aria-hidden="true"></span> 
+													</a></td>
 												</tr>
 											{% endif %}
 										{% endfor %} 
@@ -194,7 +200,8 @@
 											<th>First Name</th>
 											<th>Last Name</th>
 											<th>Department</th> 
-											<th>Medical History</th>
+											<th>Years Experience</th> 
+											<th>Degree</th>
 											<th>Details</th>
 										</tr>
 									</thead>  
@@ -205,8 +212,11 @@
 													<td>{{doctor.first_name}}</td>
 													<td>{{doctor.last_name}}</td>
 													<td>{{doctor.specialty}}</td> 
-													<td> TO BE FILLED </td>
-													<td><a href="{% url 'docdetail' doctor.id %}">Details</a></td>
+													<td> {{doctor.years_experience}}</td>
+													<td> {{doctor.degree}} </td>  
+													<td><a href="{%url 'docdetail' doctor.id%}">
+														<span class="glyphicon glyphicon-info-sign" style="margin-top: 3px; aria-hidden="true"></span> 
+													</a></td>
 												</tr>
 											{% endif %}
 										{% endfor %} 
@@ -220,7 +230,8 @@
 											<th>First Name</th>
 											<th>Last Name</th>
 											<th>Department</th> 
-											<th>Medical History</th>
+											<th>Years Experience</th> 
+											<th>Degree</th>
 											<th>Details</th>
 										</tr>
 									</thead> 
@@ -231,8 +242,11 @@
 													<td>{{doctor.first_name}}</td>
 													<td>{{doctor.last_name}}</td>
 													<td>{{doctor.specialty}}</td> 
-													<td> TO BE FILLED </td>
-													<td><a href="{% url 'docdetail' doctor.id %}">Details</a></td>
+													<td> {{doctor.years_experience}}</td>
+													<td> {{doctor.degree}} </td>  
+													<td><a href="{%url 'docdetail' doctor.id%}">
+														<span class="glyphicon glyphicon-info-sign" style="margin-top: 3px; aria-hidden="true"></span> 
+													</a></td>
 												</tr>
 											{% endif %}
 										{% endfor %} 
@@ -246,7 +260,8 @@
 											<th>First Name</th>
 											<th>Last Name</th>
 											<th>Department</th> 
-											<th>Medical History</th>
+											<th>Years Experience</th> 
+											<th>Degree</th>
 											<th>Details</th>
 										</tr>
 									</thead> 
@@ -257,8 +272,11 @@
 													<td>{{doctor.first_name}}</td>
 													<td>{{doctor.last_name}}</td>
 													<td>{{doctor.specialty}}</td> 
-													<td> TO BE FILLED </td>
-													<td><a href="{% url 'docdetail' doctor.id %}">Details</a></td>
+													<td> {{doctor.years_experience}}</td>
+													<td> {{doctor.degree}} </td>  
+													<td><a href="{%url 'docdetail' doctor.id%}">
+														<span class="glyphicon glyphicon-info-sign" style="margin-top: 3px; aria-hidden="true"></span> 
+													</a></td>
 												</tr>
 											{% endif %}
 										{% endfor %} 
@@ -272,7 +290,8 @@
 											<th>First Name</th>
 											<th>Last Name</th>
 											<th>Department</th> 
-											<th>Medical History</th>
+											<th>Years Experience</th> 
+											<th>Degree</th>
 											<th>Details</th>
 										</tr>
 									</thead> 
@@ -283,8 +302,11 @@
 													<td>{{doctor.first_name}}</td>
 													<td>{{doctor.last_name}}</td>
 													<td>{{doctor.specialty}}</td> 
-													<td> TO BE FILLED </td>
-													<td><a href="{% url 'docdetail' doctor.id %}">Details</a></td>
+													<td> {{doctor.years_experience}}</td>
+													<td> {{doctor.degree}} </td>  
+													<td><a href="{%url 'docdetail' doctor.id%}">
+														<span class="glyphicon glyphicon-info-sign" style="margin-top: 3px; aria-hidden="true"></span> 
+													</a></td>
 												</tr>
 											{% endif %}
 										{% endfor %} 
@@ -308,7 +330,7 @@
 					</div>
 					<div class = "panel-body">  
 						<a href= "{%url 'create_pat_appt' user.patient.id%}"> Add Appointment </a></br></br> 
-						{% if user.patient.appointment_set %}
+						{% if user.patient.appointment_set %} 
 							<table class="table table-striped">
 								<thead>
 									<tr>
@@ -316,20 +338,97 @@
 										<th>Start Time</th>
 										<th>End Time</th>  
 										<th>Purpose</th>
-										<th> </th> 
-										<th> </th>
+										<th>Edit</th> 
+										<th>Delete</th>
 									</tr>
 								</thead>
 								<tbody> 
-								{% for appointment in user.patient.appointment_set.all %}   
-									<tr> 
-									  <td>Dr. {{appointment.doctor.first_name}} {{appointment.doctor.last_name}}</td>
-									  <td>{{appointment.startTime}}</td>
-									  <td>{{appointment.endTime}}</td>  
-									  <td>{{appointment.purpose}}</td>
-									  <td><a href="{%url 'change_appt' appointment.id%}">Change Appointment</a></td> 
-									  <td><a href="{%url 'delete_appt' appointment.id%}">Delete Appointment</a></td>
-									</tr>  
+								{% for appointment in user.patient.appointment_set.all %} 
+									{% if appointment.startTime.month > today.month  %} 
+										<tr> 
+											<td>Dr. {{appointment.doctor.first_name}} {{appointment.doctor.last_name}}</td>
+											<td>{{appointment.startTime}}</td>
+											<td>{{appointment.endTime}}</td>  
+											<td>{{appointment.purpose}}</td>
+											<td><a href="{%url 'change_appt' appointment.id%}">
+												<span class="glyphicon glyphicon-pencil" style="margin-top: 3px; aria-hidden="true"></span> 
+											</a></td>
+											<td><a href="{%url 'delete_appt' appointment.id%}" onclick="return confirm('Are you sure you want to delete?')">
+												<span class="glyphicon glyphicon-remove-sign" style="margin-top: 3px; aria-hidden="true"></span> 
+											</a></td>
+										</tr>  
+									{% else %}  
+										<!--Appointment Month is this month-->
+										{% if appointment.startTime.month = today.month %}
+											{% if appointment.startTime.day > today.day %} 
+												<tr>
+													<td>Dr. {{appointment.doctor.first_name}} {{appointment.doctor.last_name}}</td>
+													<td>{{appointment.startTime}}</td>
+													<td>{{appointment.endTime}}</td>  
+													<td>{{appointment.purpose}}</td>
+													<td><a href="{%url 'change_appt' appointment.id%}">
+														<span class="glyphicon glyphicon-pencil" style="margin-top: 3px; aria-hidden="true"></span> 
+													</a></td>
+													<td><a href="{%url 'delete_appt' appointment.id%}" onclick="return confirm('Are you sure you want to delete?')">
+														<span class="glyphicon glyphicon-remove-sign" style="margin-top: 3px; aria-hidden="true"></span> 
+													</a></td>   
+												</tr>
+											{% endif %}  
+										{% endif %}
+									{% endif %} 
+								{% endfor %}
+								</tbody>
+							</table> 
+							{% else %}
+							<p>No Scheduled Appointments.</p>
+						{% endif %} 
+					</div> 
+				</div> 
+			</div> 
+		</div> 
+		<div class = "row">
+			<div class = "col-xs-12">
+				<!--Main Content-->
+				<div class = "panel panel-primary">
+					<div class = "panel-heading">
+						<h3 class="panel-title">Past Appointments</h3> 
+						<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
+					</div>
+					<div class = "panel-body">  
+						{% if user.patient.appointment_set %} 
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>Doctor Name</th>
+										<th>Start Time</th>
+										<th>End Time</th>  
+										<th>Purpose</th>
+									</tr>
+								</thead>
+								<tbody> 
+								{% for appointment in user.patient.appointment_set.all %} 
+									{% if appointment.startTime.month > today.month  %}  
+									{% else %}  
+										<!--Appointment Month is this month-->
+										{% if appointment.startTime.month = today.month %}
+											{% if appointment.startTime.day > today.day %} 
+											{% else %} 
+												<tr> 
+													<td>Dr. {{appointment.doctor.first_name}} {{appointment.doctor.last_name}}</td>
+													<td>{{appointment.startTime}}</td>
+													<td>{{appointment.endTime}}</td>  
+													<td>{{appointment.purpose}}</td>
+												</tr> 
+											{% endif %}   
+										{% else %} 
+											<tr>
+												<td>Dr. {{appointment.doctor.first_name}} {{appointment.doctor.last_name}}</td>
+												<td>{{appointment.startTime}}</td>
+												<td>{{appointment.endTime}}</td>  
+												<td>{{appointment.purpose}}</td> 
+											</tr> 
+										{% endif %}
+									{% endif %} 
 								{% endfor %}
 								</tbody>
 							</table> 
@@ -370,10 +469,16 @@
 									  <td>{{bill.amount}}</td>
 									  <td>{{bill.appointment}}</td>  
 									  <td>{{bill.status}}</td>  
-									  {% if bill.status == "Paid" %}
-									  <td><a href="{% url 'bill_detail' bill.id %}">Details</a></td> 
-									  {% else %} 
-									  <td><a href="{% url 'pay_bill' bill.id %}">Pay</a></td> 
+									  {% if bill.status == "Paid" %}  
+										<td><a href="{% url 'pdfgen' user.patient.id%}">
+											<span class="glyphicon glyphicon-circle-arrow-down" style="margin-top: 3px; aria-hidden="true"></span>  
+											Invoice
+										</a></td>
+									  {% else %}   
+										<td><a href="{% url 'pay_bill' bill.id %}">
+											<span class="glyphicon glyphicon-credit-card" style="margin-top: 3px; aria-hidden="true"></span> 
+											Pay
+										</a></td>
 									  {% endif %}
 									</tr>    
 									{% endif %} 
@@ -395,8 +500,7 @@
 						<h3 class="panel-title">Account Management</h3> 
 						<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
 					</div>
-					<div class = "panel-body"> 
-						<a href= "{% url 'pdfgen' user.patient.id %}">End Treatments</a></br> 				
+					<div class = "panel-body"> 				
 						<a href= "{% url 'password_change' %}">Change Password</a></br> 
 						<a href = "{% url 'medical_history' %}">Edit my Medical History</a></br>
 						<a href="{% url 'change_Patient' %}">Edit My Profile</a> </br>

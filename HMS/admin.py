@@ -52,8 +52,8 @@ class NurseAdmin(UserAdmin):
                                    'phone_number', 'gender', 'marital_Status', 'department')}),
         ('Address', {'fields': ('house_number', 'street', 'city', 'state', 'zip_code')}),
         ('Emergency Contact', {'fields': ('name', 'relation', 'primary_Phone', 'secondary_Phone')}),
-        #('Nurse Details', {'fields':('department')}),
-        ('Permissions', {'fields': ('is_admin', 'is_content_manager', 'is_active')}),
+        ('Nurse Pay', {'fields':('years_experience', 'salary', 'release_paycheck')}),
+        ('Permissions', {'fields': ('is_admin', 'is_content_manager', 'is_active', 'department')}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -90,7 +90,7 @@ class DoctorAdmin(UserAdmin):
                                    'phone_number', 'gender', 'marital_Status')}),
         ('Address', {'fields': ('house_number', 'street', 'city', 'state', 'zip_code')}),
         ('Emergency Contact', {'fields': ('name', 'relation', 'primary_Phone', 'secondary_Phone')}),
-        ('Doctor Details', {'fields': ('degree', 'specialty', 'experience')}),
+        ('Doctor Details', {'fields': ('degree', 'specialty', 'experience', 'years_experience', 'salary', 'release_paycheck')}),
         ('Permissions', {'fields': ('is_admin', 'is_content_manager', 'is_active')}),
     )
     inlines = [AppointmentInline]

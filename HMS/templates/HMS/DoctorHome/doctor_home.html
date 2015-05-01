@@ -102,23 +102,42 @@
 								</thead>
 								<tbody> 
 								{% for appointment in user.doctor.appointment_set.all %}   
+									{% if appointment.billed %}  
+									{% else %}    
 									<tr> 
-									  <td>{{appointment.patient.first_name}} {{appointment.patient.last_name}}</td>
-									  <td>{{appointment.startTime}}</td>
-									  <td>{{appointment.endTime}}</td>   
-									  <td>{{appointment.purpose}}</td>
-									  {% if appointment.billed %}
-										<td> </td>   
-										<td> </td>  
-										<td> </td> 
-																		
-									  {% else %}  
-									  	<td><a href="{%url 'change_appt' appointment.id%}">Change Appointment</a></td>
-										<td><a href="{%url 'delete_appt' appointment.id%}">Delete Appointment</a></td> 
-										<td><a href="{%url 'bill_appt' appointment.id%}">End Treatment</a></td> 
-									  {% endif %}
-									</tr>  
-								{% endfor %}
+										<td>{{appointment.patient.first_name}} {{appointment.patient.last_name}}</td>
+										<td>{{appointment.startTime}}</td>
+										<td>{{appointment.endTime}}</td>   
+										<td>{{appointment.purpose}}</td>
+										<!--Appointment month is after this month -->
+										{% if appointment.startTime.month > today.month  %} 
+											<td><a href="{%url 'change_appt' appointment.id%}">Change Appointment</a></td>  
+											<td><a href="{%url 'delete_appt' appointment.id%}" onclick="return confirm('Are you sure you want to delete?')">
+												<span class="glyphicon glyphicon-remove-sign" style="margin-top: 3px; aria-hidden="true"></span> 
+											</a></td>  
+											
+											
+										{% else %}  
+											<!--Appointment Month is this month-->
+											{% if appointment.startTime.month = today.month %}
+												{% if appointment.startTime.day > today.day %} 
+													<td><a href="{%url 'change_appt' appointment.id%}">Change Appointment</a></td>
+													<td><a href="{%url 'delete_appt' appointment.id%}" onclick="return confirm('Are you sure you want to delete?')">
+													<span class="glyphicon glyphicon-remove-sign" style="margin-top: 3px; aria-hidden="true"></span> 
+													</a></td>  
+												{% else %}  
+													<td><a href="{%url 'bill_appt' appointment.id%}">End Treatment</a></td>   
+													<td> </td>
+												{% endif %}
+											<!--Appointment month is past -->
+											{% else %} 
+												<td><a href="{%url 'bill_appt' appointment.id%}">End Treatment</a></td>   
+												<td> </td>  
+											{% endif %}
+										{% endif %} 
+										</tr> 
+									{% endif %}    
+								{% endfor %}  
 								</tbody>
 							</table> 
 							{% else %}
@@ -127,7 +146,62 @@
 					</div> 
 				</div> 
 			</div> 
+		</div> 
+	<div class = "row">
+			<div class = "col-xs-12">
+				<!--Main Content-->
+				<div class = "panel panel-primary">
+					<div class = "panel-heading">
+						<h3 class="panel-title">Completed & Billed Appointments</h3> 
+						<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
+					</div>
+					<div class = "panel-body">  
+							{% if user.doctor.appointment_set %}
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>Patient Name</th>
+										<th>Start Time</th>
+										<th>End Time</th> 
+										<th>Purpose</th> 
+										<th> </th> 
+										<th> </th>
+									</tr>
+								</thead>
+								<tbody> 
+								{% for appointment in user.doctor.appointment_set.all %}  
+									{% if appointment.billed %}
+									<tr> 
+										<td>{{appointment.patient.first_name}} {{appointment.patient.last_name}}</td>
+										<td>{{appointment.startTime}}</td>
+										<td>{{appointment.endTime}}</td>   
+										<td>{{appointment.purpose}}</td>  
+									</tr> 
+									{% endif %} 
+								{% endfor %}  
+								</tbody>
+							</table> 
+							{% else %}
+							<p>No Scheduled Appointments.</p>
+						{% endif %} 
+					</div> 
+				</div> 
+			</div> 
+		</div> 
+		<div class = "row">
+		<div class = "col-xs-12">
+			<!--Main Content-->
+			<div class = "panel panel-primary">
+				<div class = "panel-heading">
+					<h3 class="panel-title">My Paycheck</h3> 
+					<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+				<div class = "panel-body"> 
+					<a href= "{% url 'password_change' %}">View Most Recent Paycheck</a></br>
+				</div>
+			</div>
 		</div>
+	</div>
 	<div class = "row">
 		<div class = "col-xs-12">
 			<!--Main Content-->

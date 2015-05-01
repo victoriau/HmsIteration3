@@ -1,6 +1,6 @@
 <html lang="en">
 <head>
-    <title>Change Appointment</title>
+    <title>Release Doctor Paycheck</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -15,39 +15,17 @@
 <div class = "container">   
 	<div class = "row">   
 		</br>
-	</div>  
-		<div class = "row">
-		<div class "col-xs-12"> 
-			<div class = "panel panel-primary"> 
-				<div class = "panel-heading">
-					<h3 class='panel-title'> Current Appointment Details </h3> 
-				</div> 
-				<div class = "panel-body">   
-					<div>  
-					Start Time:  {{appointment.startTime}}</br> 
-					End Time:    {{appointment.endTime}}  </br>
-					{% if appointment.patient.id == user.patient.id %}
-						Doctor:     {{appointment.doctor.first_name}} {{appointment.doctor.last_name}} </br>
-					{% endif %} 
-					{% if appointment.doctor.id == user.doctor.id %}
-						Patient:    {{appointment.patient.first_name}} {{appointment.patient.last_name}} </br>
-					{% endif %}
-					</div>
-				</div>
-			</div> 
-		</div> 
 	</div> 
 	<div class = "row">
 		<div class "col-xs-12"> 
 			<div class = "panel panel-primary"> 
 				<div class = "panel-heading">
-					<h3 class='panel-title'> Change Your Appointment </h3> 
+					<h3 class='panel-title'> Release Doctor Bill </h3> 
 				</div> 
-				<div class = "panel-body">    
-					<label>Date Format: YYYY-MM-DD HH:MM:SS -M
+				<div class = "panel-body">  
 					<form id="registration_form" action="" method="post">
 						{{ form }}	
-						{% csrf_token %} 
+						{% csrf_token %}
 						<div>
 							<input type = "submit" value = "Save">
 						</div> 

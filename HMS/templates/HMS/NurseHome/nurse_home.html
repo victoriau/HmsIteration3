@@ -64,8 +64,10 @@
 								  <td>{{patient.first_name}}</td>
 								  <td>{{patient.last_name}}</td>
 								  <td>{{patient.department}}</td> 
-								  <td> TO BE FILLED </td>
-								  <td><a href="{% url 'patdetail' patient.id %}">Details</a></td>
+								  <td> {{patient.medical_history}} </td>
+								  <td><a href="{%url 'patdetail' patient.id%}">
+										<span class="glyphicon glyphicon-info-sign" style="margin-top: 3px; aria-hidden="true"></span> 
+								  </a></td>
 								</tr> 
 								{% endif %}
 							{% endfor %}
@@ -77,7 +79,21 @@
 				</div>
 			</div>
 		</div>
-	</div> 
+	</div>  
+	<div class = "row">
+		<div class = "col-xs-12">
+			<!--Main Content-->
+			<div class = "panel panel-primary">
+				<div class = "panel-heading">
+					<h3 class="panel-title">My Paycheck</h3> 
+					<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+				<div class = "panel-body"> 
+					<a href= "{% url 'password_change' %}">View Most Recent Paycheck</a></br>					
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class = "row">
 		<div class = "col-xs-12">
 			<!--Main Content-->

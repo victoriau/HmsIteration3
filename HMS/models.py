@@ -136,6 +136,10 @@ class Nurse(MyUser):
                     (EMERGENCY, 'Emergency'), 
                     (ORTHOPEDICS, 'Orthopedics'))
     department = models.CharField(max_length = 30, default = "", choices=DEPT_CHOICES)
+    years_experience = models.IntegerField(default = 0)
+    salary = models.DecimalField(max_digits=9, decimal_places = 2, default = Decimal('0.00'),
+                                 validators = [MinValueValidator(0.0)])
+    release_paycheck = models.BooleanField(default=False)
     is_nurse = models.BooleanField(default=True)
     is_authenticated = models.BooleanField(default=True)
    
@@ -164,6 +168,10 @@ class Doctor(MyUser):
     degree = models.CharField(max_length = 40, default = MED, choices = DEG_CHOICES )
     specialty = models.CharField(max_length = 30, default = "", choices=SPEC_CHOICES) #Try to turn into checkbox
     experience = models.CharField(max_length = 60, default = "")
+    years_experience = models.IntegerField(default = 0)
+    salary = models.DecimalField(max_digits=9, decimal_places = 2, default = Decimal('0.00'),
+                                 validators = [MinValueValidator(0.0)])
+    release_paycheck = models.BooleanField(default=False)
     is_doctor = models.BooleanField(default=True)
     is_authenticated = models.BooleanField(default=True)
     

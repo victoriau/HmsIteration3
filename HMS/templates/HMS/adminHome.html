@@ -141,7 +141,7 @@
 									<th>Name</th>
 									<th>Specialty</th>
 									<th>Degree</th> 
-									<th>Experience</th>
+									<th>Years Experience</th>
 									<th>Salary</th> 
 								</tr>
 							</thead>
@@ -151,9 +151,13 @@
 									  <td>{{doctor.first_name}} {{doctor.last_name}}</td>
 									  <td>{{doctor.specialty}}</td>
 									  <td>{{doctor.degree}}</td> 
-									  <td>{{doctor.experience}} Years</td> 
-									  <td> $ TBD </td>
-									  <td> Paycheck</a></td>
+									  <td>{{doctor.years_experience}}</td> 
+									  <td> $ {{doctor.salary}} </td> 
+									  {% if doctor.release_paycheck %}
+										<td> Released - Click to View </a></td> 
+									  {% else %}  
+										<td><a href="{%url 'release_doc_pay' doctor.id%}">Need to be Released</a></td>
+									  {% endif %}
 									</tr>  
 								{% endfor %}
 							</tbody>
@@ -180,6 +184,7 @@
 								<tr>
 									<th>Name</th>
 									<th>Department</th> 
+									<th>Years Experience</th>
 									<th>Salary</th> 
 								</tr>
 							</thead>
@@ -187,9 +192,14 @@
 								{% for nurse in nurse_list %}  
 									<tr> 
 									  <td>{{nurse.first_name}} {{nurse.last_name}}</td>
-									  <td>{{nurse.department}}</td>
-									  <td> $ TBD </td>
-									  <td> Paycheck</a></td>
+									  <td>{{nurse.department}}</td> 
+									  <th> {{nurse.years_experience}} </th>
+									  <td> $ {{nurse.salary}}</td>
+									  {% if nurse.release_paycheck %}
+									   <td> Released - Click to View</a></td> 
+									  {% else %}  
+										<td><a href="{%url 'release_nur_pay' nurse.id%}">Need to be Released</a></td>
+									  {% endif %}
 									</tr>  
 								{% endfor %}
 							</tbody>

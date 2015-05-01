@@ -7,7 +7,7 @@ from HMS.forms import (NurseCreationForm, NurseChangeForm, UserCreationForm,
                        PatientChangeForm, PatientCreationForm, MedicalHistoryForm,
                        PCPChangeForm, PatAppointmentCreationForm, ApptChangeForm,
                        DocAppointmentCreationForm, BillPayForm, ReleaseBillForm,
-                       BillApptForm)
+                       BillApptForm, ReleaseDocPayForm, ReleaseNurPayForm)
 from django.core.urlresolvers import reverse
 from HMS.models import MyUser, Nurse, Doctor, Patient, Appointment, Bill
 from django.contrib import auth
@@ -37,12 +37,14 @@ def registration(request):
 
 def patient_home(request):
     doctor_list = Doctor.objects.order_by('-last_name')[:25]
-    context = {'doctor_list': doctor_list}
+    today = datetime.date.today()
+    context = {'doctor_list': doctor_list, 'today': today}
     return render(request, 'HMS/PatientHome/patient_home.html', context)
 
 def doctor_home(request):
     patient_list = Patient.objects.order_by('-last_name')[:25]
-    context = {'patient_list': patient_list}
+    today = datetime.date.today()
+    context = {'patient_list': patient_list, 'today': today}
     return render(request, 'HMS/DoctorHome/doctor_home.html', context)
 
 def cal_home(request):
@@ -331,25 +333,55 @@ def pay_Bill(request, id):
 def bill_Paid(request):
     return render(request, 'HMS/billPaid.html')
 
+def bill_Released(request):
+    return render(request, 'HMS/billReleased.html')
+
+def pay_Released(request):
+    return render(request, 'HMS/payReleased.html')
+
+def release_Doc_Pay(request, id):
+    doctor = Doctor.objects.get(id=id)
+    form = ReleaseDocPayForm(request.POST or None, instance=doctor)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/HMS/Released')
+    return render(request, 'HMS/releasePay.html', {'form':form})
+
+def release_Nur_Pay(request, id):
+    nurse = Nurse.objects.get(id=id)
+    form = ReleaseNurPayForm(request.POST or None, instance=nurse)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/HMS/Released')
+    return render(request, 'HMS/releasePay.html', {'form':form})
+
 def release_Bill(request, id):
-    instance = Bill.objects.get(id=id)
-    form  = ReleaseBillForm(request.POST or None, instance=instance)
+    bill = Bill.objects.get(id=id)
+    form  = ReleaseBillForm(request.POST or None, instance=bill)
     if form.is_valid():
             form.save()
-            patient = instance.patient
+            patient = bill.patient
             response = HttpResponse(content_type = 'application/pdf')
             response['Content-Disposition'] = 'attachment; filename="Invoice.pdf"'
 
             p = canvas.Canvas(response)
-            p.drawString(75,750, "Patient: " + patient.first_name + " " + patient.last_name)
-            p.drawString(75,735, "Doctor: " + patient.primaryCareProvider.first_name + " " + patient.primaryCareProvider.last_name)
-            p.drawString(75,720, "Treatments: " )            
+            appts = Appointment.objects.all()
+            invoice_path = os.path.join(os.path.dirname(__file__), 'invoice.jpg')
+            contact_path = os.path.join(os.path.dirname(__file__), 'contact.jpg')
+            p.drawImage(invoice_path, 0, 100, width=600, height=750, preserveAspectRatio=False, anchor='c')
+            p.drawImage(contact_path, 0, 0, width=130, height=120, preserveAspectRatio=False, anchor='c')
+            p.drawString(35,718, patient.first_name + " " + patient.last_name)
+            p.drawString(35,703, str(patient.house_number) + " " + patient.street)
+            p.drawString(35,688, patient.city + ", " + patient.state + " " + patient.zip_code)
+            p.drawString(247,720, patient.primaryCareProvider.first_name + " " + patient.primaryCareProvider.last_name + ", " + patient.primaryCareProvider.degree)
             appts = Appointment.objects.all()
             num = 1
-            for i in appts:
-                if i.patient == patient:
-                    p.drawString(75,720 - num*15, "Treatments: " + i.purpose)
-                    num = num +1
+            i = bill.appointment      
+            p.drawString(157,654 - num*22, i.startTime.strftime('%d-%m-%Y'))
+            p.drawString(232,654 - num*22, i.purpose)
+            p.drawString(400,654 - num*22, i.doctor.last_name)
+            p.drawString(500,654 - num*22, "$" + str(bill.amount))
+            p.drawString(500, 358 , "$" + str(bill.amount))
             p.showPage()
             p.save()
             email = patient.email
@@ -359,8 +391,7 @@ def release_Bill(request, id):
             mail= EmailMessage(email_subject, email_body, settings.EMAIL_HOST_USER, [email])
             mail.attach("Invoice.pdf", response.content, "application/pdf")
             mail.send()
-            return HttpResponse("Email Sent")
-            #return HttpResponseRedirect('HMS/admin_homepage')
+            return HttpResponseRedirect('/HMS/Sent')
     return render(request, 'HMS/releaseBill.html', {'form': form})
 
 def bill_Appt(request, id):
@@ -388,14 +419,7 @@ def pdf_gen(request, id):
                 num = num +1
         p.showPage()
         p.save()
-        email = patient.email
-        email_subject = 'Billing Statement'
-        email_body = "Hello, this is your current billing statement for your last hospital visit."
-
-        mail= EmailMessage(email_subject, email_body, settings.EMAIL_HOST_USER, [email])
-        mail.attach("PatientReport.pdf", response.content, "application/pdf")
-        mail.send()
-        return HttpResponse("Email Sent")
+        return response
     
 
 """def register_confirm(request, activation_key):
