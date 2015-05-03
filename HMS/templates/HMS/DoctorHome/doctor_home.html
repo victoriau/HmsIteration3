@@ -65,7 +65,9 @@
 								  <td>{{patient.last_name}}</td>
 								  <td>{{patient.department}}</td> 
 								  <td> {{patient.medical_History}}</td>
-								  <td><a href="{% url 'patdetail' patient.id %}">Details</a></td> 
+								  <td><a href="{%url 'patdetail' patient.id%}">
+									<span class="glyphicon glyphicon-info-sign" style="margin-top: 3px; aria-hidden="true"></span> 
+							      </a></td>
 								</tr>  
 								{% endif %}
 							{% endfor %}

@@ -119,7 +119,7 @@ def add_Nurse(request):
             key_expires = datetime.datetime.today() + datetime.timedelta(2)
             user.activation_key=activation_key
             user.key_expires=key_expires
-            user.is_active=false
+            user.is_active= False
             user.save()
             
             email_subject = 'Account confirmation'
@@ -130,7 +130,7 @@ def add_Nurse(request):
                 [email], fail_silently=False)
 
             #return HttpResponseRedirect('/accounts/register_success')
-            return HttpResponseRedirect('registration/login.html')
+            return HttpResponseRedirect('/verification_sent.html')
         else:
             args['form'] = NurseCreationForm()
             
@@ -177,7 +177,7 @@ def add_Doctor(request):
             key_expires = datetime.datetime.today() + datetime.timedelta(2)
             user.activation_key=activation_key
             user.key_expires=key_expires
-            user.is_active=false
+            user.is_active= False
             user.save()
             
             email_subject = 'Account confirmation'
@@ -188,7 +188,7 @@ def add_Doctor(request):
                 [email], fail_silently=False)
 
             #return HttpResponseRedirect('/accounts/register_success')
-            return HttpResponseRedirect('HMS/Login/login.html') #######CHANGE URL######
+            return HttpResponseRedirect('/verification_sent.html')
         else:
             args['form'] = DoctorCreationForm()
             return HttpResponseRedirect('HMS/doctor_homepage')
@@ -234,7 +234,7 @@ def add_Patient(request):
             key_expires = datetime.datetime.today() + datetime.timedelta(2)
             user.activation_key=activation_key
             user.key_expires=key_expires
-            user.is_active=false
+            user.is_active= False
             user.save()
             
 
@@ -248,7 +248,7 @@ def add_Patient(request):
                 [email], fail_silently=False)
 
             #return HttpResponseRedirect('/accounts/register_success')
-            return HttpResponseRedirect('HMS/Login/login.html')
+            return HttpResponseRedirect('HMS/verification_sent.html')
         else:
             args['form'] = PatientCreationForm()
             return HttpResponseRedirect('HMS/patient_homepage')
@@ -361,6 +361,9 @@ def pay_Bill(request, id):
 
 def bill_Paid(request):
     return render(request, 'HMS/billPaid.html')
+
+def verification(request):
+    return render(request, 'HMS/verification_sent.html')
 
 def bill_Released(request):
     return render(request, 'HMS/billReleased.html')

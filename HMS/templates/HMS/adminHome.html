@@ -33,7 +33,7 @@
 				{% if user.is_anonymous %}
 					<a href="{% url 'django.contrib.auth.views.login' %}">login</a>
 				{% else %}   
-					<h1> Welcome, Admin {{user.first_name}} {{user.last_name}} </h1>  
+					<h1> Welcome, Admin</h1>  
 			</div> 
 		</div> 
 	</div> 
@@ -154,7 +154,7 @@
 									  <td>{{doctor.years_experience}}</td> 
 									  <td> $ {{doctor.salary}} </td> 
 									  {% if doctor.release_paycheck %}
-										<td> Released - Click to View </a></td> 
+										<td><a href= "{% url 'pdfDoc' doctor.id %}">Released - Click to View</a></br></td>
 									  {% else %}  
 										<td><a href="{%url 'release_doc_pay' doctor.id%}">Need to be Released</a></td>
 									  {% endif %}
@@ -195,8 +195,8 @@
 									  <td>{{nurse.department}}</td> 
 									  <th> {{nurse.years_experience}} </th>
 									  <td> $ {{nurse.salary}}</td>
-									  {% if nurse.release_paycheck %}
-									   <td> Released - Click to View</a></td> 
+									  {% if nurse.release_paycheck %} 
+									  <td><a href= "{% url 'pdfNur' nurse.id %}">Released - Click to View</a></br></td>
 									  {% else %}  
 										<td><a href="{%url 'release_nur_pay' nurse.id%}">Need to be Released</a></td>
 									  {% endif %}
