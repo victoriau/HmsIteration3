@@ -7,7 +7,8 @@ from HMS.forms import (NurseCreationForm, NurseChangeForm, UserCreationForm,
                        PatientChangeForm, PatientCreationForm, MedicalHistoryForm,
                        PCPChangeForm, PatAppointmentCreationForm, ApptChangeForm,
                        DocAppointmentCreationForm, BillPayForm, ReleaseBillForm,
-                       BillApptForm, ReleaseDocPayForm, ReleaseNurPayForm)
+                       BillApptForm, ReleaseDocPayForm, ReleaseNurPayForm,
+                       EditPatientForm, EditDoctorForm, EditNurseForm)
 from django.core.urlresolvers import reverse
 from HMS.models import MyUser, Nurse, Doctor, Patient, Appointment, Bill
 from django.contrib import auth
@@ -22,6 +23,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from reportlab.pdfgen import canvas
 from django.core.mail.message import EmailMessage
 from django.conf import settings
+from decimal import Decimal
 import os
 
 def login(request):
@@ -117,6 +119,7 @@ def add_Nurse(request):
             key_expires = datetime.datetime.today() + datetime.timedelta(2)
             user.activation_key=activation_key
             user.key_expires=key_expires
+            user.is_active=false
             user.save()
             
             email_subject = 'Account confirmation'
@@ -137,6 +140,14 @@ def add_Nurse(request):
     else:
         form = form_class()
         return render(request, template_name, {'form': form})
+    
+def edit_Nurse(request, id):
+    nur = Nurse.objects.get(id=id)
+    form  = EditNurseForm(request.POST or None, instance=nur)
+    if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('HMS/home')
+    return render(request, 'HMS/editProfile.html', {'form': form})
 
 #HMS/addDoctor/
 def add_Doctor(request):
@@ -166,6 +177,7 @@ def add_Doctor(request):
             key_expires = datetime.datetime.today() + datetime.timedelta(2)
             user.activation_key=activation_key
             user.key_expires=key_expires
+            user.is_active=false
             user.save()
             
             email_subject = 'Account confirmation'
@@ -185,6 +197,14 @@ def add_Doctor(request):
     else:
         form = form_class()
         return render(request, template_name, {'form': form})
+
+def edit_Doctor(request, id):
+    doc = Doctor.objects.get(id=id)
+    form  = EditDoctorForm(request.POST or None, instance=doc)
+    if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('HMS/home')
+    return render(request, 'HMS/editProfile.html', {'form': form})
 
 #HMS/addPatient/
 def add_Patient(request):
@@ -214,6 +234,7 @@ def add_Patient(request):
             key_expires = datetime.datetime.today() + datetime.timedelta(2)
             user.activation_key=activation_key
             user.key_expires=key_expires
+            user.is_active=false
             user.save()
             
 
@@ -257,6 +278,14 @@ def change_Patient(request):
     else:
         form = form_class()
         return render(request, template_name, {'form': form})
+
+def edit_Patient(request, id):
+    pat = Patient.objects.get(id=id)
+    form  = EditPatientForm(request.POST or None, instance=pat)
+    if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('HMS/home')
+    return render(request, 'HMS/editProfile.html', {'form': form})    
 
 def change_PCP(request, patient_id):
     instance = Patient.objects.get(id=patient_id)
@@ -344,6 +373,41 @@ def release_Doc_Pay(request, id):
     form = ReleaseDocPayForm(request.POST or None, instance=doctor)
     if form.is_valid():
         form.save()
+        response = HttpResponse(content_type = 'application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="Paystub.pdf"'
+			
+        p = canvas.Canvas(response)
+        today = datetime.date.today()
+
+        paystub_path = os.path.join(os.path.dirname(__file__), 'paystub.jpg')
+        annual_salary = int(doctor.salary)
+        monthly_salary = int(doctor.salary/Decimal(12))
+        state_tax = int(monthly_salary*Decimal(0.05))
+        federal_tax = int(monthly_salary*Decimal(0.06))
+        monthly_pay = monthly_salary - state_tax - federal_tax
+        ytd_pay = monthly_salary*today.month
+
+        p.drawImage(paystub_path,5,400,width = 590, height = 350, preserveAspectRatio=False, anchor='c')
+        p.drawString(20, 670, doctor.first_name + " " + doctor.last_name)
+        p.drawString(220, 670, doctor.specialty)
+        p.drawString(320, 670, str(doctor.years_experience) + " years")
+        p.drawString(440, 670, str(today.month) + "-" + str(today.month) + "-" + str(today.year))
+        p.drawString(440, 630, "$" + str(annual_salary))
+        p.drawString(440, 610, "$" + str(monthly_salary))
+        p.drawString(440, 585, "($" + str(state_tax) + ")")
+        p.drawString(440, 570, "($" + str(federal_tax) + ")")
+        p.drawString(440, 435, "$" + str(monthly_pay))
+        p.drawString(440, 410, "$" + str(ytd_pay))
+        p.showPage()
+        p.save()
+        
+        email = doctor.email
+        email_subject = 'Earnings Statement'
+        email_body = "Hello, you have a new monthly earning statement. Please see the attached file"
+
+        mail= EmailMessage(email_subject, email_body, settings.EMAIL_HOST_USER, [email])
+        mail.attach("Paystub.pdf", response.content, "application/pdf")
+        mail.send()
         return HttpResponseRedirect('/HMS/Released')
     return render(request, 'HMS/releasePay.html', {'form':form})
 
@@ -352,8 +416,106 @@ def release_Nur_Pay(request, id):
     form = ReleaseNurPayForm(request.POST or None, instance=nurse)
     if form.is_valid():
         form.save()
+        response = HttpResponse(content_type = 'application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="Paystub.pdf"'
+			
+        p = canvas.Canvas(response)
+        today = datetime.date.today()
+
+        paystub_path = os.path.join(os.path.dirname(__file__), 'paystub.jpg')
+        annual_salary = int(nurse.salary)
+        monthly_salary = int(nurse.salary/Decimal(12))
+        state_tax = int(monthly_salary*Decimal(0.05))
+        federal_tax = int(monthly_salary*Decimal(0.06))
+        monthly_pay = monthly_salary - state_tax - federal_tax
+        ytd_pay = monthly_salary*today.month
+
+        p.drawImage(paystub_path,5,400,width = 590, height = 350, preserveAspectRatio=False, anchor='c')
+        p.drawString(20, 670, nurse.first_name + " " + nurse.last_name)
+        p.drawString(220, 670, nurse.department)
+        p.drawString(320, 670, str(nurse.years_experience) + " years")
+        p.drawString(440, 670, str(today.month) + "-" + str(today.month) + "-" + str(today.year))
+        p.drawString(440, 630, "$" + str(annual_salary))
+        p.drawString(440, 610, "$" + str(monthly_salary))
+        p.drawString(440, 585, "($" + str(state_tax) + ")")
+        p.drawString(440, 570, "($" + str(federal_tax) + ")")
+        p.drawString(440, 435, "$" + str(monthly_pay))
+        p.drawString(440, 410, "$" + str(ytd_pay))
+        p.showPage()
+        p.save()
+        
+        email = nurse.email
+        email_subject = 'Earnings Statement'
+        email_body = "Hello, you have a new monthly earning statement. Please see the attached file"
+
+        mail= EmailMessage(email_subject, email_body, settings.EMAIL_HOST_USER, [email])
+        mail.attach("Paystub.pdf", response.content, "application/pdf")
+        mail.send()
         return HttpResponseRedirect('/HMS/Released')
     return render(request, 'HMS/releasePay.html', {'form':form})
+
+def view_Nur_Pay(request, id):
+    nurse = Nurse.objects.get(id=id)
+    response = HttpResponse(content_type = 'application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="Paystub.pdf"'
+			
+    p = canvas.Canvas(response)
+    today = datetime.date.today()
+    paystub_path = os.path.join(os.path.dirname(__file__), 'paystub.jpg')
+    annual_salary = int(nurse.salary)
+    monthly_salary = int(nurse.salary/Decimal(12))
+    state_tax = int(monthly_salary*Decimal(0.05))
+    federal_tax = int(monthly_salary*Decimal(0.06))
+    monthly_pay = monthly_salary - state_tax - federal_tax
+    ytd_pay = monthly_salary*today.month
+
+    p.drawImage(paystub_path,5,400,width = 590, height = 350, preserveAspectRatio=False, anchor='c')
+    p.drawString(20, 670, nurse.first_name + " " + nurse.last_name)
+    p.drawString(220, 670, nurse.department)
+    p.drawString(320, 670, str(nurse.years_experience) + " years")
+    p.drawString(440, 670, str(today.month) + "-" + str(today.month) + "-" + str(today.year))
+    p.drawString(440, 630, "$" + str(annual_salary))
+    p.drawString(440, 610, "$" + str(monthly_salary))
+    p.drawString(440, 585, "($" + str(state_tax) + ")")
+    p.drawString(440, 570, "($" + str(federal_tax) + ")")
+    p.drawString(440, 435, "$" + str(monthly_pay))
+    p.drawString(440, 410, "$" + str(ytd_pay))
+    p.showPage()
+    p.save()
+        
+    return response
+
+def view_Doc_Pay(request, id):
+    doctor = Doctor.objects.get(id=id)
+    response = HttpResponse(content_type = 'application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="Paystub.pdf"'
+			
+    p = canvas.Canvas(response)
+    today = datetime.date.today()
+
+    paystub_path = os.path.join(os.path.dirname(__file__), 'paystub.jpg')
+    annual_salary = int(doctor.salary)
+    monthly_salary = int(doctor.salary/Decimal(12))
+    state_tax = int(monthly_salary*Decimal(0.05))
+    federal_tax = int(monthly_salary*Decimal(0.06))
+    monthly_pay = monthly_salary - state_tax - federal_tax
+    ytd_pay = monthly_salary*today.month
+
+    p.drawImage(paystub_path,5,400,width = 590, height = 350, preserveAspectRatio=False, anchor='c')
+    p.drawString(20, 670, doctor.first_name + " " + doctor.last_name)
+    p.drawString(220, 670, doctor.specialty)
+    p.drawString(320, 670, str(doctor.years_experience) + " years")
+    p.drawString(440, 670, str(today.month) + "-" + str(today.month) + "-" + str(today.year))
+    p.drawString(440, 630, "$" + str(annual_salary))
+    p.drawString(440, 610, "$" + str(monthly_salary))
+    p.drawString(440, 585, "($" + str(state_tax) + ")")
+    p.drawString(440, 570, "($" + str(federal_tax) + ")")
+    p.drawString(440, 435, "$" + str(monthly_pay))
+    p.drawString(440, 410, "$" + str(ytd_pay))
+    p.showPage()
+    p.save()
+        
+    return response
 
 def release_Bill(request, id):
     bill = Bill.objects.get(id=id)
@@ -394,6 +556,35 @@ def release_Bill(request, id):
             return HttpResponseRedirect('/HMS/Sent')
     return render(request, 'HMS/releaseBill.html', {'form': form})
 
+
+def pdf_gen(request, id):
+        bill = Bill.objects.get(id=id)
+        patient = bill.patient
+        response = HttpResponse(content_type = 'application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="PatientReport.pdf"'
+
+        p = canvas.Canvas(response)
+        appts = Appointment.objects.all()
+        invoice_path = os.path.join(os.path.dirname(__file__), 'invoice.jpg')
+        contact_path = os.path.join(os.path.dirname(__file__), 'contact.jpg')
+        p.drawImage(invoice_path, 0, 100, width=600, height=750, preserveAspectRatio=False, anchor='c')
+        p.drawImage(contact_path, 0, 0, width=130, height=120, preserveAspectRatio=False, anchor='c')
+        p.drawString(35,718, patient.first_name + " " + patient.last_name)
+        p.drawString(35,703, str(patient.house_number) + " " + patient.street)
+        p.drawString(35,688, patient.city + ", " + patient.state + " " + patient.zip_code)
+        p.drawString(247,720, patient.primaryCareProvider.first_name + " " + patient.primaryCareProvider.last_name + ", " + patient.primaryCareProvider.degree)
+        appts = Appointment.objects.all()
+        num = 1
+        i = bill.appointment      
+        p.drawString(157,654 - num*22, i.startTime.strftime('%d-%m-%Y'))
+        p.drawString(232,654 - num*22, i.purpose)
+        p.drawString(400,654 - num*22, i.doctor.last_name)
+        p.drawString(500,654 - num*22, "$" + str(bill.amount))
+        p.drawString(500, 358 , "$" + str(bill.amount))
+        p.showPage()
+        p.save()
+        return response
+    
 def bill_Appt(request, id):
     instance = Appointment.objects.get(id=id)
     form  = BillApptForm(request.POST or None, instance=instance)
@@ -401,27 +592,6 @@ def bill_Appt(request, id):
             form.save()
             return HttpResponseRedirect('HMS/home')
     return render(request, 'HMS/billAppt.html', {'form': form})
-
-def pdf_gen(request, id):
-        patient = Patient.objects.get(id=id)
-        response = HttpResponse(content_type = 'application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="PatientReport.pdf"'
-
-        p = canvas.Canvas(response)
-        p.drawString(75,750, "Patient: " + patient.first_name + " " + patient.last_name)
-        p.drawString(75,735, "Doctor: " + patient.primaryCareProvider.first_name + " " + patient.primaryCareProvider.last_name)
-        p.drawString(75,720, "Treatments: " )            
-        appts = Appointment.objects.all()
-        num = 1
-        for i in appts:
-            if i.patient == patient:
-                p.drawString(75,720 - num*15, "Treatments: " + i.purpose)
-                num = num +1
-        p.showPage()
-        p.save()
-        return response
-    
-
 """def register_confirm(request, activation_key):
     #check if user is already logged in and if he is redirect him to some other url, e.g. home
     if request.MyUser.is_authenticated():

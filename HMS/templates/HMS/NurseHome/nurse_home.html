@@ -89,7 +89,7 @@
 					<span class="pull-right clickable" style="margin-top: -20px; font-size: 15px;"><i class="glyphicon glyphicon-chevron-up"></i></span>
 				</div>
 				<div class = "panel-body"> 
-					<a href= "{% url 'password_change' %}">View Most Recent Paycheck</a></br>					
+					<a href= "{% url 'pdfNur' user.nurse.id %}">View Most Recent Paycheck</a></br>					
 				</div>
 			</div>
 		</div>
@@ -104,6 +104,7 @@
 				</div>
 				<div class = "panel-body"> 
 					<a href= "{% url 'password_change' %}">Change Password</a></br>
+					<a href="{% url 'edit_nurse' user.nurse.id %}">Edit My Profile</a> </br>
 					<a href="{% url 'django.contrib.auth.views.logout' %}">Logout</a>
 					<br/>
 					{% endif %} 

@@ -65,8 +65,8 @@ class MyUser(AbstractBaseUser):
     last_name = models.CharField(max_length = 20, default = "")
     birth_date = models.DateField(default=date.today()) 
     phone_number = PhoneNumberField(null=True)
-    gender = models.CharField(max_length = 7, default = "", choices = GENDER_CHOICES)
-    marital_Status = models.CharField(max_length = 10, default = "", choices = STATUS_CHOICES)
+    gender = models.CharField(max_length = 30, default = "", choices = GENDER_CHOICES)
+    marital_Status = models.CharField(max_length = 30, default = "", choices = STATUS_CHOICES)
 
     #Address
     house_number = models.IntegerField(default = 0)
@@ -167,7 +167,6 @@ class Doctor(MyUser):
                     (OST, 'D.O.'))
     degree = models.CharField(max_length = 40, default = MED, choices = DEG_CHOICES )
     specialty = models.CharField(max_length = 30, default = "", choices=SPEC_CHOICES) #Try to turn into checkbox
-    experience = models.CharField(max_length = 60, default = "")
     years_experience = models.IntegerField(default = 0)
     salary = models.DecimalField(max_digits=9, decimal_places = 2, default = Decimal('0.00'),
                                  validators = [MinValueValidator(0.0)])
@@ -216,6 +215,10 @@ class Appointment(models.Model):
     patient = models.ForeignKey(Patient, default = 1)
     billed = models.BooleanField(default = False)
 
+    def back(self):
+        return '<a href="/HMS/admin_home"> View on Admin </a>'
+    back.allow_tags = True
+    back.short_description = ''
     def __str__(self):
         return self.patient.last_name + ':' + self.purpose
     
@@ -234,6 +237,11 @@ class Bill(models.Model):
                       (OVER, 'Overdue'))
     status = models.CharField(max_length = 8, default = "", choices=STATUS_CHOICES)
     released = models.BooleanField(default=False)
+
+    def back(self):
+        return '<a href="/HMS/admin_home"> View on Admin </a>'
+    back.allow_tags = True
+    back.short_description = ''
 
     def __str__(self):
         return self.patient.last_name + ':' + str(self.id)

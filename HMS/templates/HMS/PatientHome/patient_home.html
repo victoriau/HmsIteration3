@@ -470,11 +470,16 @@
 									  <td>{{bill.appointment}}</td>  
 									  <td>{{bill.status}}</td>  
 									  {% if bill.status == "Paid" %}  
-										<td><a href="{% url 'pdfgen' user.patient.id%}">
+										<td><a href="{% url 'pdfgen' bill.id%}">
 											<span class="glyphicon glyphicon-circle-arrow-down" style="margin-top: 3px; aria-hidden="true"></span>  
 											Invoice
-										</a></td>
-									  {% else %}   
+										</a></td> 
+										<td></td>
+									  {% else %}    
+										<td><a href="{% url 'pdfgen' bill.id%}">
+											<span class="glyphicon glyphicon-circle-arrow-down" style="margin-top: 3px; aria-hidden="true"></span>  
+											Invoice
+										</a></td> 
 										<td><a href="{% url 'pay_bill' bill.id %}">
 											<span class="glyphicon glyphicon-credit-card" style="margin-top: 3px; aria-hidden="true"></span> 
 											Pay
@@ -503,7 +508,7 @@
 					<div class = "panel-body"> 				
 						<a href= "{% url 'password_change' %}">Change Password</a></br> 
 						<a href = "{% url 'medical_history' %}">Edit my Medical History</a></br>
-						<a href="{% url 'change_Patient' %}">Edit My Profile</a> </br>
+						<a href="{% url 'edit_patient' user.patient.id %}">Edit My Profile</a> </br>
 						<a href="{% url 'django.contrib.auth.views.logout' %}">Logout</a> 
 					</div> 
 				</div> 

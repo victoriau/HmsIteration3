@@ -15,8 +15,7 @@ class PatientCreationForm(ModelForm):
 
     class Meta:
         model = Patient
-        fields = ('email', 'first_name', 'last_name', 'birth_date', 'gender',
-                  'marital_Status', 'phone_number')
+        fields = ('email', 'first_name', 'last_name')
 
     def clean_email(self):
         email = self.cleaned_data["email"]
@@ -70,6 +69,13 @@ class PatientChangeForm(ModelForm):
         # field does not have access to the initial value
         return self.initial["password"]
 
+class EditPatientForm(ModelForm):
+    class Meta:
+        model = Patient
+        fields = ('birth_date', 'gender', 'marital_Status','house_number','street','city',
+        'state','zip_code','insurance_Provider','insurance_Policy_Number')
+
+
 class DoctorCreationForm(ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
@@ -122,6 +128,12 @@ class DoctorChangeForm(ModelForm):
         # field does not have access to the initial value
         return self.initial["password"]
 
+class EditDoctorForm(ModelForm):
+    class Meta:
+        model = Doctor
+        fields = ('birth_date', 'gender', 'marital_Status','house_number','street','city',
+        'state','zip_code','specialty','years_experience')
+
 class NurseCreationForm(ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
@@ -130,7 +142,7 @@ class NurseCreationForm(ModelForm):
 
     class Meta:
         model = Nurse
-        fields = ('email', 'first_name', 'last_name', 'department','house_number','street','city','state','zip_code')
+        fields = ('email', 'first_name', 'last_name', 'department')
 
     def clean_email(self):
         email = self.cleaned_data["email"]
@@ -175,6 +187,12 @@ class NurseChangeForm(ModelForm):
         # field does not have access to the initial value
         return self.initial["password"]
 
+class EditNurseForm(ModelForm):
+    class Meta:
+        model = Nurse
+        fields = ('birth_date', 'gender', 'marital_Status','house_number','street','city',
+        'state','zip_code','years_experience')
+        
 class UserCreationForm(ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""

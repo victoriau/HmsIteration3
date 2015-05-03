@@ -664,9 +664,30 @@ div.uploader input {
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
     -o-border-radius: 6px;
+} 
+
+.registration_form charField{
+    padding: 10px;
+    display: block;
+    width: 96.3333%;
+    font-family: 'Microsoft yahei', sans-serif;
+    font-size: 0.8925em;
+    color:  #686C70;
+    -webkit-appearance: none;
+    text-transform: capitalize;
+    background: none;
+    border: 1px solid #86C8D5;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -o-border-radius: 6px;
 }
 
-.registration_form input[type="text"]:focus,.registration_form input[type="email"]:focus,.registration_form input[type="tel"]:focus,.registration_form input[type="password"]:focus,.registration_form textarea:focus{
+.registration_form input[type="text"]:focus,.registration_form input[type="email"]:focus,.registration_form input[type="id_Gender"]:focus,.registration_form input[type="tel"]:focus,.registration_form input[type="tel"]:focus,.registration_form input[type="password"]:focus,.registration_form textarea:focus{
 	box-shadow: inset -1px -1px 1px rgba(228, 228, 228, 0.67);
 	-webkit-box-shadow: inset -1px -1px 1px rgba(228, 228, 228, 0.67);
 	-moz-box-shadow: inset -1px -1px 1px rgba(228, 228, 228, 0.67);

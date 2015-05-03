@@ -90,7 +90,7 @@ class DoctorAdmin(UserAdmin):
                                    'phone_number', 'gender', 'marital_Status')}),
         ('Address', {'fields': ('house_number', 'street', 'city', 'state', 'zip_code')}),
         ('Emergency Contact', {'fields': ('name', 'relation', 'primary_Phone', 'secondary_Phone')}),
-        ('Doctor Details', {'fields': ('degree', 'specialty', 'experience', 'years_experience', 'salary', 'release_paycheck')}),
+        ('Doctor Details', {'fields': ('degree', 'specialty', 'years_experience', 'salary', 'release_paycheck')}),
         ('Permissions', {'fields': ('is_admin', 'is_content_manager', 'is_active')}),
     )
     inlines = [AppointmentInline]
@@ -140,13 +140,13 @@ class PatientAdmin(UserAdmin):
     filter_horizontal = ()
 
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'patient','doctor', 'purpose', 'startTime', 'billed')
+    list_display = ('id', 'patient','doctor', 'purpose', 'startTime', 'billed', 'back')
     search_fields = ('purpose',)
     ordering = ('startTime',)
     inlines = [BillInline]
 
 class BillAdmin(admin.ModelAdmin):
-    list_display = ('id', 'patient', 'appointment','amount', 'dueDate', 'released')
+    list_display = ('appointment', 'patient','amount', 'dueDate', 'released', 'back')
     search_fields = ('patient',)
     ordering = ('dueDate',)
 
